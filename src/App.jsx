@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 // ✅ 说明：
 // 1) 这是一个单文件 React 作品集页面，默认导出一个组件即可在 ChatGPT 右侧预览。
@@ -9,6 +9,14 @@ import React, { useMemo, useState } from "react";
 export default function PortfolioSite() {
   const [query, setQuery] = useState("");
   const [tag, setTag] = useState("All");
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "mint";
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const projects = [
     {
@@ -137,6 +145,26 @@ export default function PortfolioSite() {
                 >{t}</button>
               ))}
             </div>
+            {/* Theme switcher */}
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-neutral-400">主题色:</span>
+              {[
+                { id: "mint", label: "薄荷" },
+                { id: "ocean", label: "海蓝" },
+                { id: "violet", label: "紫罗兰" },
+                { id: "sun", label: "暖阳" },
+              ].map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setTheme(opt.id)}
+                  className={`rounded-full border px-3 py-1 text-xs transition ${
+                    theme === opt.id
+                      ? "border-indigo-400 bg-indigo-500/10 text-indigo-200"
+                      : "border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-neutral-700"
+                  }`}
+                >{opt.label}</button>
+              ))}
+            </div>
           </div>
         </div>
       </header>
@@ -197,7 +225,7 @@ export default function PortfolioSite() {
 
       <footer className="border-t border-neutral-900/60 bg-neutral-950/60">
         <div className="mx-auto max-w-6xl px-4 py-8 text-xs text-neutral-500">
-          © {new Date().getFullYear()} 徐宏杰 · Portfolio · Built with React & Tailwind
+          © {new Date().getFullYear()} 徐宏杰 · Portfolio · Built with React
         </div>
       </footer>
     </div>
