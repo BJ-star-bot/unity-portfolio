@@ -153,40 +153,18 @@ export default function PortfolioSite() {
                 >{t}</button>
               ))}
             </div>
-            {/* Theme + Mode switcher */}
+            {/* Site theme (Dark/Light) dropdown */}
             <div className="flex items-center gap-2 text-sm">
-              <span className="text-neutral-400">主题色:</span>
-              {[
-                { id: "mint", label: "薄荷" },
-                { id: "ocean", label: "海蓝" },
-                { id: "violet", label: "紫罗兰" },
-                { id: "sun", label: "暖阳" },
-              ].map((opt) => (
-                <button
-                  key={opt.id}
-                  onClick={() => setTheme(opt.id)}
-                  className={`rounded-full border px-3 py-1 text-xs transition ${
-                    theme === opt.id
-                      ? "border-indigo-400 bg-indigo-500/10 text-indigo-200"
-                      : "border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-neutral-700"
-                  }`}
-                >{opt.label}</button>
-              ))}
-              <span className="text-neutral-400" style={{marginLeft: '.5rem'}}>模式:</span>
-              {[
-                { id: "dark", label: "深色" },
-                { id: "light", label: "浅色" },
-              ].map((opt) => (
-                <button
-                  key={opt.id}
-                  onClick={() => setMode(opt.id)}
-                  className={`rounded-full border px-3 py-1 text-xs transition ${
-                    mode === opt.id
-                      ? "border-indigo-400 bg-indigo-500/10 text-indigo-200"
-                      : "border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-neutral-700"
-                  }`}
-                >{opt.label}</button>
-              ))}
+              <label className="text-neutral-400" htmlFor="mode-select">主题</label>
+              <select
+                id="mode-select"
+                value={mode}
+                onChange={(e) => setMode(e.target.value)}
+                className="rounded-xl bg-neutral-900 px-3 py-2 text-sm outline-none ring-1 ring-neutral-800 focus:ring-2 focus:ring-indigo-500 border border-neutral-800 text-neutral-300"
+              >
+                <option value="dark">深色</option>
+                <option value="light">浅色</option>
+              </select>
             </div>
           </div>
         </div>
