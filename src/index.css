@@ -200,6 +200,20 @@ footer { backdrop-filter: blur(6px); }
   --muted-500: #72847e;
 }
 
+/* Deeper accent tones when in light mode for better contrast */
+[data-mode="light"][data-theme="mint"] {
+  --accent: #14b8a6; --accent-600: #0fa395; --accent-700: #0b8076; --accent-400: #2dd4bf; --accent-200: #7ce9dc; --ring: rgba(20,184,166,0.5);
+}
+[data-mode="light"][data-theme="ocean"] {
+  --accent: #06b6d4; --accent-600: #0891b2; --accent-700: #0e7490; --accent-400: #22d3ee; --accent-200: #9ee8f5; --ring: rgba(6,182,212,0.5);
+}
+[data-mode="light"][data-theme="violet"] {
+  --accent: #8b5cf6; --accent-600: #7c3aed; --accent-700: #6d28d9; --accent-400: #a78bfa; --accent-200: #c8b9fe; --ring: rgba(139,92,246,0.5);
+}
+[data-mode="light"][data-theme="sun"] {
+  --accent: #d97706; --accent-600: #b45309; --accent-700: #92400e; --accent-400: #f59e0b; --accent-200: #f6c55b; --ring: rgba(217,119,6,0.5);
+}
+
 /* Dynamic translucent backgrounds (use palette) */
 .bg-neutral-950\/60 { background-color: color-mix(in srgb, var(--bg-950) 60%, transparent) !important; }
 .bg-neutral-900\/60 { background-color: color-mix(in srgb, var(--bg-900) 60%, transparent) !important; }

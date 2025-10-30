@@ -153,9 +153,22 @@ export default function PortfolioSite() {
                 >{t}</button>
               ))}
             </div>
-            {/* Site theme (Dark/Light) dropdown */}
+            {/* Theme color + Appearance dropdowns */}
             <div className="flex items-center gap-2 text-sm">
-              <label className="text-neutral-400" htmlFor="mode-select">主题</label>
+              <label className="text-neutral-400" htmlFor="theme-select">主题色</label>
+              <select
+                id="theme-select"
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+                className="rounded-xl bg-neutral-900 px-3 py-2 text-sm outline-none ring-1 ring-neutral-800 focus:ring-2 focus:ring-indigo-500 border border-neutral-800 text-neutral-300"
+              >
+                <option value="mint">薄荷</option>
+                <option value="ocean">海蓝</option>
+                <option value="violet">紫罗兰</option>
+                <option value="sun">暖阳</option>
+              </select>
+
+              <label className="text-neutral-400" htmlFor="mode-select">外观</label>
               <select
                 id="mode-select"
                 value={mode}
