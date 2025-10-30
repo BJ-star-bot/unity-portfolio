@@ -12,11 +12,19 @@ export default function PortfolioSite() {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("theme") || "mint";
   });
+  const [mode, setMode] = useState(() => {
+    return localStorage.getItem("mode") || "dark";
+  });
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-mode", mode);
+    localStorage.setItem("mode", mode);
+  }, [mode]);
 
   const projects = [
     {
@@ -145,7 +153,7 @@ export default function PortfolioSite() {
                 >{t}</button>
               ))}
             </div>
-            {/* Theme switcher */}
+            {/* Theme + Mode switcher */}
             <div className="flex items-center gap-2 text-sm">
               <span className="text-neutral-400">主题色:</span>
               {[
@@ -159,6 +167,21 @@ export default function PortfolioSite() {
                   onClick={() => setTheme(opt.id)}
                   className={`rounded-full border px-3 py-1 text-xs transition ${
                     theme === opt.id
+                      ? "border-indigo-400 bg-indigo-500/10 text-indigo-200"
+                      : "border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-neutral-700"
+                  }`}
+                >{opt.label}</button>
+              ))}
+              <span className="text-neutral-400" style={{marginLeft: '.5rem'}}>模式:</span>
+              {[
+                { id: "dark", label: "深色" },
+                { id: "light", label: "浅色" },
+              ].map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setMode(opt.id)}
+                  className={`rounded-full border px-3 py-1 text-xs transition ${
+                    mode === opt.id
                       ? "border-indigo-400 bg-indigo-500/10 text-indigo-200"
                       : "border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-neutral-700"
                   }`}
