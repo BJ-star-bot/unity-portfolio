@@ -140,21 +140,9 @@ export default function PortfolioSite() {
                 className="rounded-xl bg-neutral-800 px-3 py-2 text-sm hover:bg-neutral-700"
               >清空</button>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {tags.map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setTag(t)}
-                  className={`rounded-full border px-3 py-1 text-xs transition ${
-                    tag === t
-                      ? "border-indigo-400 bg-indigo-500/10 text-indigo-200"
-                      : "border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-neutral-700"
-                  }`}
-                >{t}</button>
-              ))}
-            </div>
-            {/* Theme color + Appearance dropdowns */}
-            <div className="flex items-center gap-2 text-sm">
+            {/* 外观与主题设置 */}
+            <div className="flex items-center gap-2 text-sm" title="外观与主题设置">
+              <span className="text-neutral-400">外观与主题</span>
               <label className="text-neutral-400" htmlFor="theme-select">主题色</label>
               <select
                 id="theme-select"
@@ -178,6 +166,19 @@ export default function PortfolioSite() {
                 <option value="dark">深色</option>
                 <option value="light">浅色</option>
               </select>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {tags.map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTag(t)}
+                  className={`rounded-full border px-3 py-1 text-xs transition ${
+                    tag === t
+                      ? "border-indigo-400 bg-indigo-500/10 text-indigo-200"
+                      : "border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-neutral-700"
+                  }`}
+                >{t}</button>
+              ))}
             </div>
           </div>
         </div>
