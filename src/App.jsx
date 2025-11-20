@@ -130,8 +130,8 @@ export default function PortfolioSite() {
         "重点练习 Trie / 单调队列 / 前缀和",
       ],
       links: {
-        github: "https://leetcode.cn/u/BJ-star-bot/",
-        video: "https://www.bilibili.com/video/your-id",
+        github: "https://github.com/BJ-star-bot/LeetCodeSolution",
+        
       },
     },
     {
@@ -150,10 +150,12 @@ export default function PortfolioSite() {
     },
   ];
 
+  const aboutSummary = "Unity3D 游戏开发实习生，擅长 C# / UGUI / NavMesh / Addressables / Shader Graph，关注可维护性与稳定帧率，能在短周期内交付端到端 Demo。";
+
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100">
       {/* Header */}
-      <header className="mx-auto max-w-6xl px-4 py-10">
+      <header className="mx-auto max-w-7xl px-4 py-10">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">徐宏杰 · Unity 程序员</h1>
@@ -228,7 +230,7 @@ export default function PortfolioSite() {
       </header>
 
       {/* Projects Grid */}
-      <main className="mx-auto max-w-6xl px-4 pb-24">
+      <main className="mx-auto max-w-7xl px-4 pb-24">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {[...filtered, ...extraHighlights].map((p, i) => (
             <article key={`${p.title}-${i}`} className="group rounded-2xl border border-neutral-800 bg-neutral-900/60 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-700">
@@ -273,13 +275,53 @@ export default function PortfolioSite() {
             </article>
           ))}
         </div>
+
+        <section className="mt-16">
+          <article className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 sm:p-8">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+              <div className="max-w-3xl">
+                <h2 className="text-2xl font-semibold">关于我</h2>
+                <p className="mt-3 text-sm text-neutral-300 leading-relaxed">{aboutSummary}</p>
+                <ul className="mt-4 list-disc pl-5 text-sm text-neutral-400 space-y-1">
+                  <li>多次参加 Brackeys/GMTK/TapTap 聚光灯 GameJam，负责程序与玩法实现。</li>
+                  <li>喜欢搭建可复用工具链，如对象池管理器、LoadSceneManager、UI 框架。</li>
+                  <li>当前聚焦中大型关卡加载、性能监控与自动化验证流程。</li>
+                </ul>
+              </div>
+              <div className="flex flex-col gap-3 text-sm text-neutral-300">
+                <CopyEmail email="2200623670@qq.com" />
+                <a className="rounded-xl border border-neutral-700 px-4 py-2 text-center hover:bg-neutral-800" href="/resume.pdf" target="_blank" rel="noreferrer">
+                  下载简历（PDF）
+                </a>
+              </div>
+            </div>
+          </article>
+        </section>
       </main>
 
       <footer className="border-t border-neutral-900/60 bg-neutral-950/60">
-        <div className="mx-auto max-w-6xl px-4 py-8 text-xs text-neutral-500">
+        <div className="mx-auto max-w-7xl px-4 py-8 text-xs text-neutral-500">
           © {new Date().getFullYear()} 徐宏杰 · Portfolio · Built with React
         </div>
       </footer>
     </div>
+  );
+}
+
+function CopyEmail({ email }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(email);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1600);
+        } catch {}
+      }}
+      className="rounded-xl border border-neutral-700 px-4 py-2 text-center hover:bg-neutral-800"
+    >
+      {copied ? "邮箱已复制 ✅" : "复制邮箱"}
+    </button>
   );
 }
