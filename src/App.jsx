@@ -31,9 +31,13 @@ export default function PortfolioSite() {
       title: "对象池优化 Demo",
       period: "2025.05",
       summary:
-        "基于泛型与接口的通用对象池，降低 GC 抖动；1000+ 实例稳定 60FPS。",
-      tech: ["Unity", "C#", "对象池", "性能优化"],
-      metrics: ["GC 分配 -60%", "FPS 稳定 60"],
+        "Unity 版 ObjectPool 示例：泛型池 + GridPartition + CustomUpdateManager，演示万级物体的复用、空间分区与帧率监控。",
+      tech: ["Unity", "C#", "对象池", "性能优化", "GridPartition"],
+      metrics: [
+        "ObjectPool/IPoolAble 自动扩容复用，追踪 total/active",
+        "GridPartition/IGridObject O(1) 迁移 + 近邻检索",
+        "CustomUpdateManager 分帧驱动 + FrameTime 展示 FPS/P95",
+      ],
       links: {
         github: "https://github.com/BJ-star-bot/ObjectPool",
         video: "https://www.bilibili.com/video/your-id",
@@ -89,6 +93,55 @@ export default function PortfolioSite() {
       },
     },
   ];
+
+  const leetcode = [
+    {
+      title: "1. Two Sum",
+      difficulty: "Easy",
+      summary: "哈希表 O(n) 秒杀；记录下标避免重复使用同一元素。",
+      link: "https://leetcode.cn/problems/two-sum/",
+      tags: ["哈希", "数组"],
+    },
+    {
+      title: "239. Sliding Window Maximum",
+      difficulty: "Hard",
+      summary: "单调队列维护窗口最大值，Push/Pop 均摊 O(1)，跑得比暴力快 10x。",
+      link: "https://leetcode.cn/problems/sliding-window-maximum/",
+      tags: ["队列", "滑动窗口"],
+    },
+    {
+      title: "208. Implement Trie",
+      difficulty: "Medium",
+      summary: "Trie + 节点引用实现 insert/search/startsWith；复用在词频统计。",
+      link: "https://leetcode.cn/problems/implement-trie-prefix-tree/",
+      tags: ["数据结构", "Trie"],
+    },
+  ];
+
+  const difficultyStyle = {
+    Easy: "border-emerald-400/40 bg-emerald-500/10 text-emerald-200",
+    Medium: "border-amber-400/40 bg-amber-500/10 text-amber-200",
+    Hard: "border-rose-400/40 bg-rose-500/10 text-rose-200",
+  };
+
+  const loadSceneModule = {
+    title: "LoadSceneManager 场景切换方案",
+    summary:
+      "可复用的场景切换 + UI 过渡系统，统一管理黑幕动画、加载进度、场景附加/卸载与按钮触发。",
+    features: [
+      "SceneIds + SceneMapping 按枚举维护 Build Settings 场景，自动匹配 UI 场景。",
+      "TransitionController + LoadingProgressUI 负责黑幕淡入淡出与假进度曲线。",
+      "LoadSceneManager.Instance.LoadScene(SceneIds.library) 即可完成切换，并抛出 Begin/End 事件。",
+      "支持附加 UI 场景、批量卸载 sceneUnload、随机提示文案等扩展。",
+    ],
+    steps: [
+      "将全部场景登记到 SceneConfigure.cs，名称与 Build Settings 一致。",
+      "在 Resources/UI/ 下准备加载画布，更新 transitionCanvasPath。",
+      "常驻对象挂 LoadSceneManager（DontDestroyOnLoad），并绑定组件引用。",
+      "使用 LoadSceneEventButton 或 LoadSceneEventTrigger 触发切换（按钮/剧情/Timeline）。",
+    ],
+    link: "https://github.com/BJ-star-bot/LoadSceneManager",
+  };
 
   const tags = useMemo(() => [
     "All",
@@ -223,6 +276,82 @@ export default function PortfolioSite() {
             </article>
           ))}
         </div>
+
+        {/* LeetCode */}
+        <section className="mt-14 rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 className="text-xl font-semibold">LeetCode 刷题</h2>
+              <p className="text-sm text-neutral-400">记录精选题目与总结，保持算法手感。</p>
+            </div>
+            <span className="text-xs text-neutral-500">累计 {leetcode.length} 题 · 持续更新</span>
+          </div>
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {leetcode.map((item, idx) => (
+              <article key={idx} className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="text-base font-semibold leading-tight">{item.title}</h3>
+                  <span className={`rounded-full border px-2 py-0.5 text-xs ${difficultyStyle[item.difficulty] || "border-neutral-700 text-neutral-300"}`}>
+                    {item.difficulty}
+                  </span>
+                </div>
+                <p className="mt-2 text-sm text-neutral-300 min-h-[3rem]">{item.summary}</p>
+                <div className="mt-3 flex flex-wrap gap-2 text-xs text-neutral-400">
+                  {item.tags?.map((t) => (
+                    <span key={t} className="rounded-full border border-neutral-800 px-2 py-0.5">{t}</span>
+                  ))}
+                </div>
+                <a
+                  href={item.link}
+                  target="_blank"
+                  className="mt-4 inline-flex items-center gap-1 text-sm text-indigo-300 hover:text-indigo-200"
+                  rel="noreferrer"
+                >
+                  查看题解 →
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* LoadScene */}
+        <section className="mt-14 rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 className="text-xl font-semibold">{loadSceneModule.title}</h2>
+              <p className="text-sm text-neutral-300">{loadSceneModule.summary}</p>
+            </div>
+            <a
+              href={loadSceneModule.link}
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm text-indigo-300 hover:text-indigo-200"
+            >
+              查看仓库 →
+            </a>
+          </div>
+          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <article className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-5">
+              <h3 className="text-base font-semibold text-neutral-100">功能亮点</h3>
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-neutral-300">
+                {loadSceneModule.features.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            </article>
+            <article className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-5">
+              <h3 className="text-base font-semibold text-neutral-100">集成步骤</h3>
+              <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-neutral-300">
+                {loadSceneModule.steps.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ol>
+              <p className="mt-4 text-xs text-neutral-500">
+                通过 TransitionController/LoadingProgressUI 统一管理黑幕、进度条与提示文案，支持按钮 & Timeline 触发。
+              </p>
+            </article>
+          </div>
+        </section>
 
         {/* About / 联系 */}
         <section className="mt-14 rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6">
