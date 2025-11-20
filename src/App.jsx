@@ -94,52 +94,10 @@ export default function PortfolioSite() {
     },
   ];
 
-  const leetcode = [
-    {
-      title: "1. Two Sum",
-      difficulty: "Easy",
-      summary: "哈希表 O(n) 秒杀；记录下标避免重复使用同一元素。",
-      link: "https://leetcode.cn/problems/two-sum/",
-      tags: ["哈希", "数组"],
-    },
-    {
-      title: "239. Sliding Window Maximum",
-      difficulty: "Hard",
-      summary: "单调队列维护窗口最大值，Push/Pop 均摊 O(1)，跑得比暴力快 10x。",
-      link: "https://leetcode.cn/problems/sliding-window-maximum/",
-      tags: ["队列", "滑动窗口"],
-    },
-    {
-      title: "208. Implement Trie",
-      difficulty: "Medium",
-      summary: "Trie + 节点引用实现 insert/search/startsWith；复用在词频统计。",
-      link: "https://leetcode.cn/problems/implement-trie-prefix-tree/",
-      tags: ["数据结构", "Trie"],
-    },
-  ];
-
-  const difficultyStyle = {
-    Easy: "border-emerald-400/40 bg-emerald-500/10 text-emerald-200",
-    Medium: "border-amber-400/40 bg-amber-500/10 text-amber-200",
-    Hard: "border-rose-400/40 bg-rose-500/10 text-rose-200",
-  };
-
   const loadSceneModule = {
     title: "LoadSceneManager 场景切换方案",
     summary:
-      "可复用的场景切换 + UI 过渡系统，统一管理黑幕动画、加载进度、场景附加/卸载与按钮触发。",
-    features: [
-      "SceneIds + SceneMapping 按枚举维护 Build Settings 场景，自动匹配 UI 场景。",
-      "TransitionController + LoadingProgressUI 负责黑幕淡入淡出与假进度曲线。",
-      "LoadSceneManager.Instance.LoadScene(SceneIds.library) 即可完成切换，并抛出 Begin/End 事件。",
-      "支持附加 UI 场景、批量卸载 sceneUnload、随机提示文案等扩展。",
-    ],
-    steps: [
-      "将全部场景登记到 SceneConfigure.cs，名称与 Build Settings 一致。",
-      "在 Resources/UI/ 下准备加载画布，更新 transitionCanvasPath。",
-      "常驻对象挂 LoadSceneManager（DontDestroyOnLoad），并绑定组件引用。",
-      "使用 LoadSceneEventButton 或 LoadSceneEventTrigger 触发切换（按钮/剧情/Timeline）。",
-    ],
+      "一套可复用的场景切换与 UI 过渡模块，统一管理黑幕、加载条与附加场景。",
     link: "https://github.com/BJ-star-bot/LoadSceneManager",
   };
 
@@ -159,89 +117,36 @@ export default function PortfolioSite() {
       return hitTag && hitQuery;
     });
   }, [projects, tag, query]);
-
-  const secondarySections = [
+  const extraHighlights = [
     {
-      id: "leetcode",
-      title: "LeetCode 刷题",
-      description: "记录精选题目与总结，保持算法手感。",
-      meta: `累计 ${leetcode.length} 题 · 持续更新`,
-      render: () => (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {leetcode.map((item, idx) => (
-            <article key={idx} className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-4">
-              <div className="flex items-center justify-between gap-3">
-                <h3 className="text-base font-semibold leading-tight">{item.title}</h3>
-                <span className={`rounded-full border px-2 py-0.5 text-xs ${difficultyStyle[item.difficulty] || "border-neutral-700 text-neutral-300"}`}>
-                  {item.difficulty}
-                </span>
-              </div>
-              <p className="mt-2 text-sm text-neutral-300 min-h-[3rem]">{item.summary}</p>
-              <div className="mt-3 flex flex-wrap gap-2 text-xs text-neutral-400">
-                {item.tags?.map((t) => (
-                  <span key={t} className="rounded-full border border-neutral-800 px-2 py-0.5">{t}</span>
-                ))}
-              </div>
-              <a
-                href={item.link}
-                target="_blank"
-                className="mt-4 inline-flex items-center gap-1 text-sm text-indigo-300 hover:text-indigo-200"
-                rel="noreferrer"
-              >
-                查看题解 →
-              </a>
-            </article>
-          ))}
-        </div>
-      ),
-    },
-    {
-      id: "loadscene",
-      title: loadSceneModule.title,
-      description: loadSceneModule.summary,
-      action: {
-        label: "查看仓库 →",
-        href: loadSceneModule.link,
+      title: "LeetCode 刷题节奏",
+      period: "持续更新",
+      summary:
+        "保持周更刷题节奏，覆盖数据结构/图/滑窗等核心题型，沉淀题解与思路复盘，打磨基础算法能力。",
+      tech: ["算法", "刷题", "总结"],
+      metrics: [
+        "周更 3~5 题 + 总结",
+        "题解同步 GitHub / 笔记库",
+        "重点练习 Trie / 单调队列 / 前缀和",
+      ],
+      links: {
+        github: "https://leetcode.cn/u/BJ-star-bot/",
+        video: "https://www.bilibili.com/video/your-id",
       },
-      render: () => (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <article className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-5">
-            <h3 className="text-base font-semibold text-neutral-100">功能亮点</h3>
-            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-neutral-300">
-              {loadSceneModule.features.map((item, idx) => (
-                <li key={idx}>{item}</li>
-              ))}
-            </ul>
-          </article>
-          <article className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-5">
-            <h3 className="text-base font-semibold text-neutral-100">集成步骤</h3>
-            <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-neutral-300">
-              {loadSceneModule.steps.map((item, idx) => (
-                <li key={idx}>{item}</li>
-              ))}
-            </ol>
-            <p className="mt-4 text-xs text-neutral-500">
-              通过 TransitionController/LoadingProgressUI 统一管理黑幕、进度条与提示文案，支持按钮 & Timeline 触发。
-            </p>
-          </article>
-        </div>
-      ),
     },
     {
-      id: "about",
-      title: "关于我",
-      description: "Unity3D 游戏开发实习生，擅长 C# / UGUI / NavMesh / Addressables / Shader Graph。",
-      render: () => (
-        <div>
-          <p className="text-sm text-neutral-300 leading-relaxed">
-            关注稳定帧率与可维护性架构，参与 Brackeys、GMTK、TapTap 聚光灯 等 GameJam，可在短周期内完成端到端可玩 Demo。
-          </p>
-          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
-            <CopyEmail email="2200623670@qq.com" />
-            <a className="rounded-xl border border-neutral-700 px-3 py-2 hover:bg-neutral-800" href="/resume.pdf" target="_blank">下载简历（PDF）</a>
-          </div>
-        </div>
-      ),
+      title: loadSceneModule.title,
+      period: "工具",
+      summary: loadSceneModule.summary,
+      tech: ["Unity", "C#", "LoadScene"],
+      metrics: [
+        "一键切场景 + 黑幕渐变",
+        "加载进度条 / 假进度曲线",
+        "支持附加 UI 场景与事件回调",
+      ],
+      links: {
+        github: loadSceneModule.link,
+      },
     },
   ];
 
@@ -325,19 +230,23 @@ export default function PortfolioSite() {
       {/* Projects Grid */}
       <main className="mx-auto max-w-6xl px-4 pb-24">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((p, i) => (
-            <article key={i} className="group rounded-2xl border border-neutral-800 bg-neutral-900/60 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-700">
+          {[...filtered, ...extraHighlights].map((p, i) => (
+            <article key={`${p.title}-${i}`} className="group rounded-2xl border border-neutral-800 bg-neutral-900/60 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-700">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold leading-tight">{p.title}</h3>
-                <span className="rounded-full bg-neutral-800 px-2 py-0.5 text-xs text-neutral-300">{p.period}</span>
+                {p.period && (
+                  <span className="rounded-full bg-neutral-800 px-2 py-0.5 text-xs text-neutral-300">{p.period}</span>
+                )}
               </div>
               <p className="mt-2 text-sm text-neutral-300 min-h-[3.5rem]">{p.summary}</p>
 
-              <div className="mt-3 flex flex-wrap gap-2">
-                {p.tech.map((t) => (
-                  <span key={t} className="rounded-full bg-neutral-800/80 px-2 py-0.5 text-xs text-neutral-300">{t}</span>
-                ))}
-              </div>
+              {p.tech?.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {p.tech.map((t) => (
+                    <span key={t} className="rounded-full bg-neutral-800/80 px-2 py-0.5 text-xs text-neutral-300">{t}</span>
+                  ))}
+                </div>
+              )}
 
               {p.metrics?.length > 0 && (
                 <ul className="mt-3 flex list-disc flex-col gap-1 pl-5 text-xs text-neutral-400">
@@ -347,54 +256,23 @@ export default function PortfolioSite() {
                 </ul>
               )}
 
-              <div className="mt-4 flex items-center gap-3 text-sm">
-                {p.links.github && (
-                  <a className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700" href={p.links.github} target="_blank">GitHub</a>
+              <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
+                {p.links?.github && (
+                  <a className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700" href={p.links.github} target="_blank" rel="noreferrer">GitHub</a>
                 )}
-                {p.links.video && (
-                  <a className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700" href={p.links.video} target="_blank">视频</a>
+                {p.links?.video && (
+                  <a className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700" href={p.links.video} target="_blank" rel="noreferrer">视频</a>
                 )}
-                {p.links.itch && (
-                  <a className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700" href={p.links.itch} target="_blank">Itch.io</a>
+                {p.links?.itch && (
+                  <a className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700" href={p.links.itch} target="_blank" rel="noreferrer">Itch.io</a>
+                )}
+                {p.links?.resume && (
+                  <a className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700" href={p.links.resume} target="_blank" rel="noreferrer">简历</a>
                 )}
               </div>
             </article>
           ))}
         </div>
-
-        {/* Secondary modules grouped */}
-        <section className="mt-14">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {secondarySections.map((section) => (
-              <article key={section.id} className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 flex flex-col gap-5">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <h2 className="text-xl font-semibold">{section.title}</h2>
-                    {section.description && (
-                      <p className="text-sm text-neutral-400 mt-1">{section.description}</p>
-                    )}
-                  </div>
-                  <div className="flex flex-col items-start gap-2 text-sm text-neutral-400 sm:items-end">
-                    {section.meta && (
-                      <span className="text-xs text-neutral-500">{section.meta}</span>
-                    )}
-                    {section.action && (
-                      <a
-                        href={section.action.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-sm text-indigo-300 hover:text-indigo-200"
-                      >
-                        {section.action.label}
-                      </a>
-                    )}
-                  </div>
-                </div>
-                {section.render()}
-              </article>
-            ))}
-          </div>
-        </section>
       </main>
 
       <footer className="border-t border-neutral-900/60 bg-neutral-950/60">
@@ -403,23 +281,5 @@ export default function PortfolioSite() {
         </div>
       </footer>
     </div>
-  );
-}
-
-function CopyEmail({ email }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <button
-      onClick={async () => {
-        try {
-          await navigator.clipboard.writeText(email);
-          setCopied(true);
-          setTimeout(() => setCopied(false), 1600);
-        } catch {}
-      }}
-      className="rounded-xl border border-neutral-700 px-3 py-2 hover:bg-neutral-800"
-    >
-      {copied ? "邮箱已复制 ✅" : "复制邮箱"}
-    </button>
   );
 }
