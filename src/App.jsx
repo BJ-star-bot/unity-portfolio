@@ -35,7 +35,7 @@ export default function PortfolioSite() {
       tech: ["Unity", "C#", "对象池", "性能优化"],
       metrics: ["GC 分配 -60%", "FPS 稳定 60"],
       links: {
-        github: "https://github.com/yourname/object-pool-demo",
+        github: "https://github.com/BJ-star-bot/ObjectPool",
         video: "https://www.bilibili.com/video/your-id",
         itch: "https://yourname.itch.io/object-pool-demo",
       },
@@ -120,11 +120,11 @@ export default function PortfolioSite() {
             <div className="mt-3 flex flex-wrap gap-2 text-sm text-neutral-400">
               <a className="hover:text-white" href="mailto:2200623670@qq.com">2200623670@qq.com</a>
               <span>·</span>
-              <a className="hover:text-white" href="https://github.com/yourname" target="_blank">GitHub</a>
+              <a className="hover:text-white" href="https://github.com/BJ-star-bot" target="_blank">GitHub</a>
               <span>·</span>
-              <a className="hover:text-white" href="https://space.bilibili.com/yourid" target="_blank">Bilibili</a>
+              <a className="hover:text-white" href="https://space.bilibili.com/190527948?spm_id_from=333.1007.0.0" target="_blank">Bilibili</a>
               <span>·</span>
-              <a className="hover:text-white" href="https://yourname.itch.io" target="_blank">Itch.io</a>
+              <a className="hover:text-white" href="https://hh7lin.itch.io/" target="_blank">Itch.io</a>
             </div>
           </div>
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:items-end">
@@ -229,7 +229,7 @@ export default function PortfolioSite() {
           <h2 className="text-xl font-semibold">关于我</h2>
           <p className="mt-2 text-neutral-300 text-sm leading-relaxed">
             Unity3D 游戏开发实习生，擅长 C# / UGUI / NavMesh / Addressables / Shader Graph，关注稳定帧率与可维护性架构。
-            参与 Brackeys、TapTap 等 GameJam，能在短周期内完成端到端可玩 Demo。
+            参与 Brackeys、GMTK，TapTap聚光灯 等 GameJam，能在短周期内完成端到端可玩 Demo。
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
             <CopyEmail email="2200623670@qq.com" />
