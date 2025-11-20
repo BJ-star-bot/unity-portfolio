@@ -160,6 +160,91 @@ export default function PortfolioSite() {
     });
   }, [projects, tag, query]);
 
+  const secondarySections = [
+    {
+      id: "leetcode",
+      title: "LeetCode 刷题",
+      description: "记录精选题目与总结，保持算法手感。",
+      meta: `累计 ${leetcode.length} 题 · 持续更新`,
+      render: () => (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {leetcode.map((item, idx) => (
+            <article key={idx} className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-base font-semibold leading-tight">{item.title}</h3>
+                <span className={`rounded-full border px-2 py-0.5 text-xs ${difficultyStyle[item.difficulty] || "border-neutral-700 text-neutral-300"}`}>
+                  {item.difficulty}
+                </span>
+              </div>
+              <p className="mt-2 text-sm text-neutral-300 min-h-[3rem]">{item.summary}</p>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs text-neutral-400">
+                {item.tags?.map((t) => (
+                  <span key={t} className="rounded-full border border-neutral-800 px-2 py-0.5">{t}</span>
+                ))}
+              </div>
+              <a
+                href={item.link}
+                target="_blank"
+                className="mt-4 inline-flex items-center gap-1 text-sm text-indigo-300 hover:text-indigo-200"
+                rel="noreferrer"
+              >
+                查看题解 →
+              </a>
+            </article>
+          ))}
+        </div>
+      ),
+    },
+    {
+      id: "loadscene",
+      title: loadSceneModule.title,
+      description: loadSceneModule.summary,
+      action: {
+        label: "查看仓库 →",
+        href: loadSceneModule.link,
+      },
+      render: () => (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <article className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-5">
+            <h3 className="text-base font-semibold text-neutral-100">功能亮点</h3>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-neutral-300">
+              {loadSceneModule.features.map((item, idx) => (
+                <li key={idx}>{item}</li>
+              ))}
+            </ul>
+          </article>
+          <article className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-5">
+            <h3 className="text-base font-semibold text-neutral-100">集成步骤</h3>
+            <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-neutral-300">
+              {loadSceneModule.steps.map((item, idx) => (
+                <li key={idx}>{item}</li>
+              ))}
+            </ol>
+            <p className="mt-4 text-xs text-neutral-500">
+              通过 TransitionController/LoadingProgressUI 统一管理黑幕、进度条与提示文案，支持按钮 & Timeline 触发。
+            </p>
+          </article>
+        </div>
+      ),
+    },
+    {
+      id: "about",
+      title: "关于我",
+      description: "Unity3D 游戏开发实习生，擅长 C# / UGUI / NavMesh / Addressables / Shader Graph。",
+      render: () => (
+        <div>
+          <p className="text-sm text-neutral-300 leading-relaxed">
+            关注稳定帧率与可维护性架构，参与 Brackeys、GMTK、TapTap 聚光灯 等 GameJam，可在短周期内完成端到端可玩 Demo。
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
+            <CopyEmail email="2200623670@qq.com" />
+            <a className="rounded-xl border border-neutral-700 px-3 py-2 hover:bg-neutral-800" href="/resume.pdf" target="_blank">下载简历（PDF）</a>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100">
       {/* Header */}
@@ -277,92 +362,37 @@ export default function PortfolioSite() {
           ))}
         </div>
 
-        {/* LeetCode */}
-        <section className="mt-14 rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h2 className="text-xl font-semibold">LeetCode 刷题</h2>
-              <p className="text-sm text-neutral-400">记录精选题目与总结，保持算法手感。</p>
-            </div>
-            <span className="text-xs text-neutral-500">累计 {leetcode.length} 题 · 持续更新</span>
-          </div>
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {leetcode.map((item, idx) => (
-              <article key={idx} className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <h3 className="text-base font-semibold leading-tight">{item.title}</h3>
-                  <span className={`rounded-full border px-2 py-0.5 text-xs ${difficultyStyle[item.difficulty] || "border-neutral-700 text-neutral-300"}`}>
-                    {item.difficulty}
-                  </span>
+        {/* Secondary modules grouped */}
+        <section className="mt-14">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            {secondarySections.map((section) => (
+              <article key={section.id} className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 flex flex-col gap-5">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold">{section.title}</h2>
+                    {section.description && (
+                      <p className="text-sm text-neutral-400 mt-1">{section.description}</p>
+                    )}
+                  </div>
+                  <div className="flex flex-col items-start gap-2 text-sm text-neutral-400 sm:items-end">
+                    {section.meta && (
+                      <span className="text-xs text-neutral-500">{section.meta}</span>
+                    )}
+                    {section.action && (
+                      <a
+                        href={section.action.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm text-indigo-300 hover:text-indigo-200"
+                      >
+                        {section.action.label}
+                      </a>
+                    )}
+                  </div>
                 </div>
-                <p className="mt-2 text-sm text-neutral-300 min-h-[3rem]">{item.summary}</p>
-                <div className="mt-3 flex flex-wrap gap-2 text-xs text-neutral-400">
-                  {item.tags?.map((t) => (
-                    <span key={t} className="rounded-full border border-neutral-800 px-2 py-0.5">{t}</span>
-                  ))}
-                </div>
-                <a
-                  href={item.link}
-                  target="_blank"
-                  className="mt-4 inline-flex items-center gap-1 text-sm text-indigo-300 hover:text-indigo-200"
-                  rel="noreferrer"
-                >
-                  查看题解 →
-                </a>
+                {section.render()}
               </article>
             ))}
-          </div>
-        </section>
-
-        {/* LoadScene */}
-        <section className="mt-14 rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h2 className="text-xl font-semibold">{loadSceneModule.title}</h2>
-              <p className="text-sm text-neutral-300">{loadSceneModule.summary}</p>
-            </div>
-            <a
-              href={loadSceneModule.link}
-              target="_blank"
-              rel="noreferrer"
-              className="text-sm text-indigo-300 hover:text-indigo-200"
-            >
-              查看仓库 →
-            </a>
-          </div>
-          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <article className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-5">
-              <h3 className="text-base font-semibold text-neutral-100">功能亮点</h3>
-              <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-neutral-300">
-                {loadSceneModule.features.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ul>
-            </article>
-            <article className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-5">
-              <h3 className="text-base font-semibold text-neutral-100">集成步骤</h3>
-              <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-neutral-300">
-                {loadSceneModule.steps.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ol>
-              <p className="mt-4 text-xs text-neutral-500">
-                通过 TransitionController/LoadingProgressUI 统一管理黑幕、进度条与提示文案，支持按钮 & Timeline 触发。
-              </p>
-            </article>
-          </div>
-        </section>
-
-        {/* About / 联系 */}
-        <section className="mt-14 rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6">
-          <h2 className="text-xl font-semibold">关于我</h2>
-          <p className="mt-2 text-neutral-300 text-sm leading-relaxed">
-            Unity3D 游戏开发实习生，擅长 C# / UGUI / NavMesh / Addressables / Shader Graph，关注稳定帧率与可维护性架构。
-            参与 Brackeys、GMTK，TapTap聚光灯 等 GameJam，能在短周期内完成端到端可玩 Demo。
-          </p>
-          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
-            <CopyEmail email="2200623670@qq.com" />
-            <a className="rounded-xl border border-neutral-700 px-3 py-2 hover:bg-neutral-800" href="/resume.pdf" target="_blank">下载简历（PDF）</a>
           </div>
         </section>
       </main>
