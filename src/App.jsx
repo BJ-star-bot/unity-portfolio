@@ -57,15 +57,15 @@ export default function PortfolioSite() {
       },
     },
     {
-      title: "AI 寻路 + FSM",
-      period: "2025.07",
+      title: "不使用Nav插件的A* 网格寻路方案",
+      period: "2025.11",
       summary:
-        "NavMesh + 有限状态机，支持巡逻/追踪/搜寻；动态障碍避让。",
-      tech: ["Unity", "C#", "NavMesh", "AI"],
+        "A* 网格寻路方案：GridManager/PathFinder 生成动态网格，UnitMover 平滑走点，Detect+TraceAI 结合视野追踪并在障碍刷新时自动切换行为。",
+      tech: ["Unity", "C#", "NavMesh", "A*"],
       metrics: ["状态切换 <1ms", "动态避障"],
       links: {
-        github: "https://github.com/yourname/ai-fsm-navmesh",
-        video: "https://www.bilibili.com/video/your-id",
+        github: "https://github.com/BJ-star-bot/FindPath",
+        
       },
     },
     {
