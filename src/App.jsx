@@ -67,7 +67,7 @@ export default function PortfolioSite() {
       "SessionHost/Client 一键切换 Host/Client，实时状态提示",
     ],
     links: {
-      github: "https://github.com/BJ-star-bot/LANSystem",
+      github: "https://github.com/BJ-star-bot/Network",
     },
   },
   ];
