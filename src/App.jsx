@@ -29,7 +29,7 @@ export default function PortfolioSite() {
   const projects = [
     {
       title: "对象池优化 Demo",
-      period: "2025.05",
+      period: "2025.10",
       summary:
         "Unity 版 ObjectPool 示例：泛型池 + GridPartition + CustomUpdateManager，演示万级物体的复用、空间分区与帧率监控。",
       tech: ["Unity", "C#", "对象池", "性能优化", "GridPartition"],
@@ -40,20 +40,7 @@ export default function PortfolioSite() {
       ],
       links: {
         github: "https://github.com/BJ-star-bot/ObjectPool",
-        video: "https://www.bilibili.com/video/your-id",
-        itch: "https://yourname.itch.io/object-pool-demo",
-      },
-    },
-    {
-      title: "UGUI 模块化框架",
-      period: "2025.06",
-      summary:
-        "多界面解耦，Canvas 分层合批；支持动态路由与对象池复用列表。",
-      tech: ["Unity", "C#", "UGUI", "架构"],
-      metrics: ["DrawCall -35%", "列表复用 10k+"],
-      links: {
-        github: "https://github.com/yourname/ugui-framework",
-        video: "https://www.bilibili.com/video/your-id",
+
       },
     },
     {
@@ -66,30 +53,6 @@ export default function PortfolioSite() {
       links: {
         github: "https://github.com/BJ-star-bot/FindPath",
         
-      },
-    },
-    {
-      title: "Shader 溶解/描边",
-      period: "2025.07",
-      summary:
-        "Shader Graph 实现噪声溶解与描边，可运行时调参与事件驱动。",
-      tech: ["Unity", "Shader Graph", "URP"],
-      metrics: ["GPU 负载低", "参数可动画化"],
-      links: {
-        github: "https://github.com/yourname/shader-dissolve-outline",
-        video: "https://www.bilibili.com/video/your-id",
-      },
-    },
-    {
-      title: "Addressables 资源加载优化",
-      period: "2025.08",
-      summary:
-        "分组与依赖清理，异步加载与缓存策略：场景切换时间-40%。",
-      tech: ["Unity", "C#", "Addressables", "性能优化"],
-      metrics: ["切换 -40%", "内存峰值 -20%"],
-      links: {
-        github: "https://github.com/yourname/addressables-optimization",
-        video: "https://www.bilibili.com/video/your-id",
       },
     },
   ];
