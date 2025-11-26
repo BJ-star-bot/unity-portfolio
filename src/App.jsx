@@ -55,6 +55,21 @@ export default function PortfolioSite() {
         
       },
     },
+      {
+    title: "局域网联网系统 Demo",
+    period: "2025.11",
+    summary:
+      "Unity 局域网联机：端口监听、IP 输入、广播发现、Host/Client 切换。",
+    tech: ["Unity", "C#", "局域网", "广播", "Host/Client"],
+    metrics: [
+      "LANDiscovery/INode 端口监听 + 局域网广播拉取房间列表",
+      "IPv4Panel 输入/校验 IP，快速直连 Host",
+      "SessionHost/Client 一键切换 Host/Client，实时状态提示",
+    ],
+    links: {
+      github: "https://github.com/BJ-star-bot/LANSystem",
+    },
+  },
   ];
 
   const loadSceneModule = {
@@ -99,7 +114,7 @@ export default function PortfolioSite() {
     },
     {
       title: loadSceneModule.title,
-      period: "工具",
+      period: "2025.9",
       summary: loadSceneModule.summary,
       tech: ["Unity", "C#", "LoadScene"],
       metrics: [
