@@ -268,7 +268,12 @@ export default function PortfolioSite() {
               </div>
               <div className="flex flex-col gap-3 text-sm text-neutral-300">
                 <CopyEmail email="2200623670@qq.com" />
-                <a className="rounded-xl border border-neutral-700 px-4 py-2 text-center hover:bg-neutral-800" href="/resume.pdf" target="_blank" rel="noreferrer">
+              <a
+                className="rounded-xl border border-neutral-700 px-4 py-2 text-center hover:bg-neutral-800"
+                href={`${import.meta.env.BASE_URL}resume.pdf`}
+                target="_blank"
+                rel="noreferrer"
+              >
                   下载简历（PDF）
                 </a>
               </div>
