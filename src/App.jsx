@@ -1,19 +1,20 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-// ✅ 说明：
-// 1) 这是一个单文件 React 作品集页面，默认导出一个组件即可在 ChatGPT 右侧预览。
-// 2) Tailwind 已可直接使用；无需外部依赖，拷贝到任意 React/Vite 项目也能跑。
-// 3) 修改下方 projects 数组即可填入你的 Demo/项目（支持 GitHub、B站/Itch 链接、技术标签、性能指标）。
-// 4) 本页面含：筛选/搜索/标签/卡片/指标/一键复制邮箱按钮；适合放到 GitHub Pages / Vercel / Netlify。
-
 export default function PortfolioSite() {
   const [query, setQuery] = useState("");
   const [tag, setTag] = useState("All");
+
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("theme") || "mint";
   });
+
   const [mode, setMode] = useState(() => {
     return localStorage.getItem("mode") || "dark";
+  });
+
+  // 新增：排序方式（asc/desc）
+  const [sortOrder, setSortOrder] = useState(() => {
+    return localStorage.getItem("sortOrder") || "desc";
   });
 
   useEffect(() => {
@@ -26,131 +27,181 @@ export default function PortfolioSite() {
     localStorage.setItem("mode", mode);
   }, [mode]);
 
-  const projects = [
+  useEffect(() => {
+    localStorage.setItem("sortOrder", sortOrder);
+  }, [sortOrder]);
+
+  // ---------------------------
+  // 统一结构的项目列表
+  // ---------------------------
+  const baseProjects = [
+    {
+      title: "联机系统 Demo（LAN + Relay + 状态同步）",
+      period: "2025.11",
+      summary:
+        "完整 Unity 联机框架：局域网广播发现 + 跨网 Relay 中继 + 轻量级状态同步/预测回滚 Demo。",
+      tech: ["Unity", "Netcode", "LAN 广播", "Unity Relay", "状态同步"],
+      metrics: [
+        "LANDiscovery：UDP 广播自动发现房间，实时刷新 Session 列表",
+        "IPv4Panel：手动 IP 输入 + 即时校验",
+        "Relay 跨网直连：自动创建/加入中继房间",
+        "轻量状态同步：插值 / 预测 / 回滚 Demo",
+      ],
+      links: { github: "https://github.com/BJ-star-bot/Network" },
+    },
+    {
+      title: "不使用Nav插件的 A* 网格寻路",
+      period: "2025.11",
+      summary:
+        "A* 网格寻路方案：GridManager/PathFinder 生成动态网格，UnitMover 平滑走点，DetectAI 自动切换行为。",
+      tech: ["Unity", "C#", "A*", "AI"],
+      metrics: ["状态切换 <1ms", "实时动态避障"],
+      links: { github: "https://github.com/BJ-star-bot/FindPath" },
+    },
     {
       title: "对象池优化 Demo",
       period: "2025.10",
       summary:
-        "Unity 版 ObjectPool 示例：泛型池 + GridPartition + CustomUpdateManager，演示万级物体的复用、空间分区与帧率监控。",
+        "Unity 版 ObjectPool：泛型池 + GridPartition 空间分区 + CustomUpdateManager 分帧刷新，支持万级单位复用。",
       tech: ["Unity", "C#", "对象池", "性能优化", "GridPartition"],
       metrics: [
-        "ObjectPool/IPoolAble 自动扩容复用，追踪 total/active",
-        "GridPartition/IGridObject O(1) 迁移 + 近邻检索",
-        "CustomUpdateManager 分帧驱动 + FrameTime 展示 FPS/P95",
+        "ObjectPool 自动扩容复用，追踪 total/active",
+        "GridPartition O(1) 迁移 + 近邻检索",
+        "CustomUpdateManager 分帧驱动 + 帧率监控",
       ],
-      links: {
-        github: "https://github.com/BJ-star-bot/ObjectPool",
-
-      },
+      links: { github: "https://github.com/BJ-star-bot/ObjectPool" },
     },
     {
-      title: "不使用Nav插件的A* 网格寻路方案",
-      period: "2025.11",
+      title: "LoadSceneManager 场景切换方案",
+      period: "2025.09",
       summary:
-        "A* 网格寻路方案：GridManager/PathFinder 生成动态网格，UnitMover 平滑走点，Detect+TraceAI 结合视野追踪并在障碍刷新时自动切换行为。",
-      tech: ["Unity", "C#", "NavMesh", "A*"],
-      metrics: ["状态切换 <1ms", "动态避障"],
-      links: {
-        github: "https://github.com/BJ-star-bot/FindPath",
-        
-      },
+        "可复用的场景切换模块：统一管理黑幕过渡、加载条、假进度曲线与附加场景异步加载。",
+      tech: ["Unity", "C#", "LoadScene", "工具链"],
+      metrics: [
+        "枚举 → 场景路径统一映射",
+        "黑幕渐隐渐显过渡",
+        "附加场景加载与事件回调",
+        "支持假进度曲线",
+      ],
+      links: { github: "https://github.com/BJ-star-bot/LoadSceneManager" },
     },
-      {
-    title: "局域网联网系统 Demo",
-    period: "2025.11",
-    summary:
-      "Unity 局域网联机：端口监听、IP 输入、广播发现、Host/Client 切换。",
-    tech: ["Unity", "C#", "局域网", "广播", "Host/Client"],
-    metrics: [
-      "LANDiscovery/INode 端口监听 + 局域网广播拉取房间列表",
-      "IPv4Panel 输入/校验 IP，快速直连 Host",
-      "SessionHost/Client 一键切换 Host/Client，实时状态提示",
-    ],
-    links: {
-      github: "https://github.com/BJ-star-bot/Network",
-    },
-  },
   ];
 
-  const loadSceneModule = {
-    title: "LoadSceneManager 场景切换方案",
-    summary:
-      "一套可复用的场景切换与 UI 过渡模块，统一管理黑幕、加载条与附加场景。",
-    link: "https://github.com/BJ-star-bot/LoadSceneManager",
-  };
-
-  const tags = useMemo(() => [
-    "All",
-    ...Array.from(new Set(projects.flatMap((p) => p.tech))).sort(),
-  ], []);
-
-  const filtered = useMemo(() => {
-    return projects.filter((p) => {
-      const hitTag = tag === "All" || p.tech.includes(tag);
-      const q = query.trim().toLowerCase();
-      const hitQuery = !q ||
-        p.title.toLowerCase().includes(q) ||
-        p.summary.toLowerCase().includes(q) ||
-        p.tech.join(" ").toLowerCase().includes(q);
-      return hitTag && hitQuery;
-    });
-  }, [projects, tag, query]);
   const extraHighlights = [
     {
       title: "LeetCode 刷题节奏",
       period: "持续更新",
       summary:
-        "保持周更刷题节奏，覆盖数据结构/图/滑窗等核心题型，沉淀题解与思路复盘，打磨基础算法能力。",
+        "保持周更刷题节奏，沉淀题解与思路复盘。覆盖数据结构、双指针、图、滑窗等核心题型。",
       tech: ["算法", "刷题", "总结"],
       metrics: [
-        "周更 3~5 题 + 总结",
+        "周更 3~5 题 + 题解总结",
         "题解同步 GitHub / 笔记库",
         "重点练习 Trie / 单调队列 / 前缀和",
       ],
-      links: {
-        github: "https://github.com/BJ-star-bot/LeetCodeSolution",
-        
-      },
-    },
-    {
-      title: loadSceneModule.title,
-      period: "2025.9",
-      summary: loadSceneModule.summary,
-      tech: ["Unity", "C#", "LoadScene"],
-      metrics: [
-        "一键切场景 + 黑幕渐变",
-        "加载进度条 / 假进度曲线",
-        "支持附加 UI 场景与事件回调",
-      ],
-      links: {
-        github: loadSceneModule.link,
-      },
+      links: { github: "https://github.com/BJ-star-bot/LeetCodeSolution" },
     },
   ];
 
-  const aboutSummary = "Unity3D 游戏开发实习生，擅长 C# / UGUI / NavMesh / Addressables / Shader Graph，关注可维护性与稳定帧率，能在短周期内交付端到端 Demo。";
+  // ---------------------------
+  // 时间排序（持续更新 → 最前，其余按 yyyy.mm）
+  // ---------------------------
+  const sortedProjects = useMemo(() => {
+    const all = [...baseProjects, ...extraHighlights];
 
+    // 基础排序（持续更新固定最前）
+    all.sort((a, b) => {
+      if (a.period === "持续更新") return -1;
+      if (b.period === "持续更新") return 1;
+      return b.period.localeCompare(a.period);
+    });
+
+    // 用户选择升序 or 降序
+    if (sortOrder === "asc") {
+      return [...all].reverse();
+    }
+    return all;
+  }, [sortOrder]);
+
+  // ---------------------------
+  // 标签筛选
+  // ---------------------------
+  const tags = useMemo(() => {
+    return [
+      "All",
+      ...Array.from(new Set(sortedProjects.flatMap((p) => p.tech))).sort(),
+    ];
+  }, [sortedProjects]);
+
+  // ---------------------------
+  // 关键字过滤
+  // ---------------------------
+  const filtered = useMemo(() => {
+    return sortedProjects.filter((p) => {
+      const hitTag = tag === "All" || p.tech.includes(tag);
+      const q = query.trim().toLowerCase();
+      const hitQuery =
+        !q ||
+        p.title.toLowerCase().includes(q) ||
+        p.summary.toLowerCase().includes(q) ||
+        p.tech.join(" ").toLowerCase().includes(q);
+      return hitTag && hitQuery;
+    });
+  }, [sortedProjects, tag, query]);
+
+  const aboutSummary =
+    "Unity3D 游戏开发实习生，擅长 C# / UGUI / NavMesh / Addressables / Shader Graph，关注可维护性与稳定帧率，能在短周期内交付端到端 Demo。";
+
+  // ---------------------------
+  // 页面渲染
+  // ---------------------------
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100">
       {/* Header */}
       <header className="mx-auto max-w-7xl px-4 py-10">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">徐宏杰 · Unity 程序员</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              徐宏杰 · Unity 程序员
+            </h1>
             <p className="mt-2 text-neutral-300">
-              专注 Gameplay、UGUI 框架、性能优化与工具开发。参与多次 GameJam 并独立完成端到端 Demo。
+              专注 Gameplay、UGUI 框架、性能优化与工具开发。参与多次 GameJam
+              并独立完成端到端 Demo。
             </p>
             <div className="mt-3 flex flex-wrap gap-2 text-sm text-neutral-400">
-              <a className="hover:text-white" href="mailto:2200623670@qq.com">2200623670@qq.com</a>
+              <a className="hover:text-white" href="mailto:2200623670@qq.com">
+                2200623670@qq.com
+              </a>
               <span>·</span>
-              <a className="hover:text-white" href="https://github.com/BJ-star-bot" target="_blank">GitHub</a>
+              <a
+                className="hover:text-white"
+                href="https://github.com/BJ-star-bot"
+                target="_blank"
+              >
+                GitHub
+              </a>
               <span>·</span>
-              <a className="hover:text-white" href="https://space.bilibili.com/190527948?spm_id_from=333.1007.0.0" target="_blank">Bilibili</a>
+              <a
+                className="hover:text-white"
+                href="https://space.bilibili.com/190527948"
+                target="_blank"
+              >
+                Bilibili
+              </a>
               <span>·</span>
-              <a className="hover:text-white" href="https://hh7lin.itch.io/" target="_blank">Itch.io</a>
+              <a
+                className="hover:text-white"
+                href="https://hh7lin.itch.io/"
+                target="_blank"
+              >
+                Itch.io
+              </a>
             </div>
           </div>
+
+          {/* 搜索 + 主题 + 排序 */}
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:items-end">
+            {/* 搜索框 */}
             <div className="flex w-full items-center gap-2">
               <input
                 value={query}
@@ -161,17 +212,26 @@ export default function PortfolioSite() {
               <button
                 onClick={() => setQuery("")}
                 className="rounded-xl bg-neutral-800 px-3 py-2 text-sm hover:bg-neutral-700"
-              >清空</button>
+              >
+                清空
+              </button>
             </div>
-            {/* 外观与主题设置 */}
-            <div className="flex items-center gap-2 text-sm" title="外观与主题设置">
+
+            {/* 外观 + 排序 */}
+            <div
+              className="flex items-center gap-2 text-sm"
+              title="外观与主题设置"
+            >
               <span className="text-neutral-400">外观与主题</span>
-              <label className="text-neutral-400" htmlFor="theme-select">主题色</label>
+
+              <label className="text-neutral-400" htmlFor="theme-select">
+                主题色
+              </label>
               <select
                 id="theme-select"
                 value={theme}
                 onChange={(e) => setTheme(e.target.value)}
-                className="rounded-xl bg-neutral-900 px-3 py-2 text-sm outline-none ring-1 ring-neutral-800 focus:ring-2 focus:ring-indigo-500 border border-neutral-800 text-neutral-300"
+                className="rounded-xl bg-neutral-900 px-3 py-2 text-sm outline-none ring-1 ring-neutral-800 border border-neutral-800 text-neutral-300"
               >
                 <option value="mint">薄荷</option>
                 <option value="ocean">海蓝</option>
@@ -179,17 +239,35 @@ export default function PortfolioSite() {
                 <option value="sun">暖阳</option>
               </select>
 
-              <label className="text-neutral-400" htmlFor="mode-select">外观</label>
+              <label className="text-neutral-400" htmlFor="mode-select">
+                外观
+              </label>
               <select
                 id="mode-select"
                 value={mode}
                 onChange={(e) => setMode(e.target.value)}
-                className="rounded-xl bg-neutral-900 px-3 py-2 text-sm outline-none ring-1 ring-neutral-800 focus:ring-2 focus:ring-indigo-500 border border-neutral-800 text-neutral-300"
+                className="rounded-xl bg-neutral-900 px-3 py-2 text-sm outline-none ring-1 ring-neutral-800 border border-neutral-800 text-neutral-300"
               >
                 <option value="dark">深色</option>
                 <option value="light">浅色</option>
               </select>
+
+              {/* 新增：排序选择 */}
+              <label className="text-neutral-400" htmlFor="sort-select">
+                排序
+              </label>
+              <select
+                id="sort-select"
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+                className="rounded-xl bg-neutral-900 px-3 py-2 text-sm outline-none ring-1 ring-neutral-800 border border-neutral-800 text-neutral-300"
+              >
+                <option value="desc">时间：最新 → 最旧</option>
+                <option value="asc">时间：最旧 → 最新</option>
+              </select>
             </div>
+
+            {/* 标签筛选 */}
             <div className="flex flex-wrap gap-2">
               {tags.map((t) => (
                 <button
@@ -200,30 +278,47 @@ export default function PortfolioSite() {
                       ? "border-indigo-400 bg-indigo-500/10 text-indigo-200"
                       : "border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-neutral-700"
                   }`}
-                >{t}</button>
+                >
+                  {t}
+                </button>
               ))}
             </div>
           </div>
         </div>
       </header>
 
-      {/* Projects Grid */}
+      {/* 项目展示 */}
       <main className="mx-auto max-w-7xl px-4 pb-24">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {[...filtered, ...extraHighlights].map((p, i) => (
-            <article key={`${p.title}-${i}`} className="group rounded-2xl border border-neutral-800 bg-neutral-900/60 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-700">
+          {filtered.map((p, i) => (
+            <article
+              key={`${p.title}-${i}`}
+              className="group rounded-2xl border border-neutral-800 bg-neutral-900/60 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-700"
+            >
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold leading-tight">{p.title}</h3>
+                <h3 className="text-lg font-semibold leading-tight">
+                  {p.title}
+                </h3>
                 {p.period && (
-                  <span className="rounded-full bg-neutral-800 px-2 py-0.5 text-xs text-neutral-300">{p.period}</span>
+                  <span className="rounded-full bg-neutral-800 px-2 py-0.5 text-xs text-neutral-300">
+                    {p.period}
+                  </span>
                 )}
               </div>
-              <p className="mt-2 text-sm text-neutral-300 min-h-[3.5rem]">{p.summary}</p>
+
+              <p className="mt-2 text-sm text-neutral-300 min-h-[3.5rem]">
+                {p.summary}
+              </p>
 
               {p.tech?.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-2">
                   {p.tech.map((t) => (
-                    <span key={t} className="rounded-full bg-neutral-800/80 px-2 py-0.5 text-xs text-neutral-300">{t}</span>
+                    <span
+                      key={t}
+                      className="rounded-full bg-neutral-800/80 px-2 py-0.5 text-xs text-neutral-300"
+                    >
+                      {t}
+                    </span>
                   ))}
                 </div>
               )}
@@ -238,42 +333,44 @@ export default function PortfolioSite() {
 
               <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
                 {p.links?.github && (
-                  <a className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700" href={p.links.github} target="_blank" rel="noreferrer">GitHub</a>
-                )}
-                {p.links?.video && (
-                  <a className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700" href={p.links.video} target="_blank" rel="noreferrer">视频</a>
-                )}
-                {p.links?.itch && (
-                  <a className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700" href={p.links.itch} target="_blank" rel="noreferrer">Itch.io</a>
-                )}
-                {p.links?.resume && (
-                  <a className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700" href={p.links.resume} target="_blank" rel="noreferrer">简历</a>
+                  <a
+                    className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700"
+                    href={p.links.github}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    GitHub
+                  </a>
                 )}
               </div>
             </article>
           ))}
         </div>
 
+        {/* About */}
         <section className="mt-16">
           <article className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 sm:p-8">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
               <div className="max-w-3xl">
                 <h2 className="text-2xl font-semibold">关于我</h2>
-                <p className="mt-3 text-sm text-neutral-300 leading-relaxed">{aboutSummary}</p>
+                <p className="mt-3 text-sm text-neutral-300 leading-relaxed">
+                  {aboutSummary}
+                </p>
                 <ul className="mt-4 list-disc pl-5 text-sm text-neutral-400 space-y-1">
-                  <li>多次参加 Brackeys/GMTK/TapTap 聚光灯 GameJam，负责程序与玩法实现。</li>
-                  <li>喜欢搭建可复用工具链，如对象池管理器、LoadSceneManager、UI 框架。</li>
-                  <li>当前聚焦中大型关卡加载、性能监控与自动化验证流程。</li>
+                  <li>多次参加 Brackeys / GMTK / TapTap 聚光灯 GameJam。</li>
+                  <li>喜欢搭建工具链：对象池、LoadSceneManager、UI 框架。</li>
+                  <li>关注关卡加载、性能监控与自动化验证流程。</li>
                 </ul>
               </div>
+
               <div className="flex flex-col gap-3 text-sm text-neutral-300">
                 <CopyEmail email="2200623670@qq.com" />
-              <a
-                className="rounded-xl border border-neutral-700 px-4 py-2 text-center hover:bg-neutral-800"
-                href={`${import.meta.env.BASE_URL}resume.pdf`}
-                target="_blank"
-                rel="noreferrer"
-              >
+                <a
+                  className="rounded-xl border border-neutral-700 px-4 py-2 text-center hover:bg-neutral-800"
+                  href={`${import.meta.env.BASE_URL}resume.pdf`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   下载简历（PDF）
                 </a>
               </div>
@@ -282,9 +379,11 @@ export default function PortfolioSite() {
         </section>
       </main>
 
+      {/* Footer */}
       <footer className="border-t border-neutral-900/60 bg-neutral-950/60">
         <div className="mx-auto max-w-7xl px-4 py-8 text-xs text-neutral-500">
-          © {new Date().getFullYear()} 徐宏杰 · Portfolio · Built with React v0.1
+          © {new Date().getFullYear()} 徐宏杰 · Portfolio · Built with React
+          v0.1
         </div>
       </footer>
     </div>
