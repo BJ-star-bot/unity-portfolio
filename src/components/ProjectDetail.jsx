@@ -1,7 +1,38 @@
 import React from "react";
 
+const articleContentMap = {
+  "不使用Nav插件的 A* 网格寻路": [
+    {
+      text:
+        "这个项目基于 Unity 的网格寻路：GridManager 在场景中生成规则网格，每个 Node 记录 walkable 状态和世界坐标，PathFinder 使用 A*（openSet/closedSet、g+h 成本）在网格上求最短路径，并实时调用 RefreshNode 适配会移动的障碍。",
+      mediaIndex: 0,
+    },
+    {
+      text:
+        "移动体由 UnitMover 控制：收到目标点后通过协程沿节点列表移动，支持转向插值、停止距离控制、动态重新寻路（路径被占时重新规划），还能同步保持在地面高度。",
+      mediaIndex: 1,
+    },
+    {
+      text:
+        "感知系统 Detect 提供视野扇形绘制与可见性判定：LateUpdate 中生成 Mesh 显示视野区域，同时利用 OverlapSphere + Angle + Raycast 策略筛选最近可见目标，供 AI 查询。",
+      mediaIndex: 2,
+    },
+    {
+      text:
+        "敌人 AI TraceAI 将两者结合：Detect.CheckVisible 判定玩家，UnitMover 负责追击；当失去目标后，AI 会进入 Idle 状态，在初始方向左右 maxSearchAngle 内左右扫视并随机停顿，同时周期性挑选 roamRadius 范围内（以 roamCenter 或初始位置为中心）可达点，利用同一寻路系统完成巡逻。",
+      mediaIndex: 3,
+    },
+    {
+      text:
+        "该方案的优势：逻辑拆分明确（感知/寻路/移动），可在 Inspector 中调参，具备动态障碍适应性与可视化调试手段；即便在触及网格边界时，也通过 PathFinder 的空节点保护安全失败，不会崩溃。自然可以扩展更多 AI 状态或多种路径策略，是构建动作或 RPG 原型中轻量却实用的寻路解决方案。",
+    },
+  ],
+};
+
 export default function ProjectDetail({ project, onBack }) {
   if (!project) return null;
+  const articleSections = articleContentMap[project.title];
+  const showArticle = Array.isArray(articleSections) && articleSections.length > 0;
 
   return (
     <section className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 sm:p-10 fade-slide-in">
@@ -26,35 +57,70 @@ export default function ProjectDetail({ project, onBack }) {
           )}
           <p className="mt-4 text-neutral-300 leading-relaxed">{project.summary}</p>
 
-          {project.media?.length > 0 && (
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              {project.media.map((item, idx) => (
-                <figure
-                  key={item.src ?? idx}
-                  className="overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950/40"
-                >
-                  <img
-                    src={item.src}
-                    alt={item.alt || `${project.title} 展示 ${idx + 1}`}
-                    loading="lazy"
-                    className="h-full w-full object-cover"
-                  />
-                  {item.alt && (
-                    <figcaption className="px-3 py-2 text-xs text-neutral-400">
-                      {item.alt}
-                    </figcaption>
-                  )}
-                </figure>
-              ))}
+          {showArticle ? (
+            <div className="mt-8 space-y-10">
+              {articleSections.map((section, idx) => {
+                const media =
+                  typeof section.mediaIndex === "number"
+                    ? project.media?.[section.mediaIndex]
+                    : null;
+                return (
+                  <article key={`${project.title}-section-${idx}`} className="space-y-4">
+                    {media && (
+                      <figure className="flex flex-col items-center gap-2">
+                        <div className="w-full rounded-2xl border border-neutral-800 bg-neutral-950/60 p-2">
+                          <img
+                            src={media.src}
+                            alt={media.alt || `${project.title} 插图 ${idx + 1}`}
+                            loading="lazy"
+                            className="mx-auto max-h-[360px] w-full object-contain"
+                          />
+                        </div>
+                        {media.alt && (
+                          <figcaption className="text-xs text-neutral-400">
+                            {media.alt}
+                          </figcaption>
+                        )}
+                      </figure>
+                    )}
+                    <p className="text-sm leading-relaxed text-neutral-300">{section.text}</p>
+                  </article>
+                );
+              })}
             </div>
-          )}
+          ) : (
+            <>
+              {project.media?.length > 0 && (
+                <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                  {project.media.map((item, idx) => (
+                    <figure
+                      key={item.src ?? idx}
+                      className="overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950/40"
+                    >
+                      <img
+                        src={item.src}
+                        alt={item.alt || `${project.title} 展示 ${idx + 1}`}
+                        loading="lazy"
+                        className="h-full w-full object-cover"
+                      />
+                      {item.alt && (
+                        <figcaption className="px-3 py-2 text-xs text-neutral-400">
+                          {item.alt}
+                        </figcaption>
+                      )}
+                    </figure>
+                  ))}
+                </div>
+              )}
 
-          {project.metrics?.length > 0 && (
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-neutral-400">
-              {project.metrics.map((m, idx) => (
-                <li key={idx}>{m}</li>
-              ))}
-            </ul>
+              {project.metrics?.length > 0 && (
+                <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-neutral-400">
+                  {project.metrics.map((m, idx) => (
+                    <li key={idx}>{m}</li>
+                  ))}
+                </ul>
+              )}
+            </>
           )}
         </div>
 

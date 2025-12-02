@@ -345,14 +345,6 @@ export default function PortfolioSite() {
                     </div>
                   )}
 
-                  {p.metrics?.length > 0 && (
-                    <ul className="mt-3 flex list-disc flex-col gap-1 pl-5 text-xs text-neutral-400">
-                      {p.metrics.map((m, idx) => (
-                        <li key={idx}>{m}</li>
-                      ))}
-                    </ul>
-                  )}
-
                   <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
                     {p.links?.github && (
                       <a
