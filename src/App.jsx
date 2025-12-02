@@ -59,6 +59,24 @@ export default function PortfolioSite() {
       tech: ["Unity", "C#", "A*", "AI"],
       metrics: ["状态切换 <1ms", "实时动态避障"],
       links: { github: "https://github.com/BJ-star-bot/FindPath" },
+      media: [
+        {
+          src: "/FindPathGif/FindPath1.gif",
+          alt: "角色沿生成路径移动，避开固定障碍",
+        },
+        {
+          src: "/FindPathGif/FindPath2.gif",
+          alt: "避障示例：动态绕开移障碍，重新计算网格",
+        },
+        {
+          src: "/FindPathGif/FindPath3.gif",
+          alt: "敌人巡逻ai",
+        },
+        {
+          src: "/FindPathGif/FindPath4.gif",
+          alt: "敌人接入寻路系统",
+        },
+      ],
     },
     {
       title: "对象池优化 Demo",
@@ -87,6 +105,21 @@ export default function PortfolioSite() {
       ],
       links: { github: "https://github.com/BJ-star-bot/LoadSceneManager" },
     },
+    {
+      title: "3D 角色控制 Demo",
+      period: "2025.08",
+      summary:
+        "第三人称可控角色：自制状态机 + Animator 多层动画（上身攻击/下身移动分离）+ 自由可旋转相机，支持平滑移动、攻击与自然过渡。",
+      tech: ["Unity", "C#", "Animator", "State Machine", "Character Controller"],
+      metrics: [
+        "自研轻量状态机（Idle/Move/Attack/Hit）",
+        "Animator 双层动画：上半身攻击、下半身保持移动",
+        "相机自由旋转/跟随：支持拖拽观察角色",
+        "平滑 BlendTree + 动作参数驱动过渡",
+      ],
+      links: { github: "https://github.com/BJ-star-bot/KnightDemo" },
+    },
+
   ];
 
   const extraHighlights = [
@@ -164,7 +197,7 @@ export default function PortfolioSite() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
-              徐宏杰 · Unity 程序员
+              徐宏杰 · 游戏客户端开发
             </h1>
             <p className="mt-2 text-neutral-300">
               专注 Gameplay、UGUI 框架、性能优化与工具开发。参与多次 GameJam
@@ -264,8 +297,8 @@ export default function PortfolioSite() {
                 onChange={(e) => setSortOrder(e.target.value)}
                 className="rounded-xl bg-neutral-900 px-3 py-2 text-sm outline-none ring-1 ring-neutral-800 border border-neutral-800 text-neutral-300"
               >
-                <option value="desc">时间：最新 → 最旧</option>
-                <option value="asc">时间：最旧 → 最新</option>
+                <option value="desc">时间降序</option>
+                <option value="asc">时间升序</option>
               </select>
             </div>
 
@@ -292,7 +325,7 @@ export default function PortfolioSite() {
       {/* 项目展示 */}
       <main className="mx-auto max-w-7xl px-4 pb-24">
         {activeProject ? (
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 sm:p-10">
+          <section className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 sm:p-10 fade-slide-in">
             <button
               onClick={() => setActiveProject(null)}
               className="mb-6 inline-flex items-center gap-2 text-sm text-neutral-300 hover:text-white"
@@ -357,7 +390,7 @@ export default function PortfolioSite() {
           </section>
         ) : (
           <>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 fade-slide-in">
               {filtered.map((p, i) => (
                 <article
                   key={`${p.title}-${i}`}
@@ -418,7 +451,7 @@ export default function PortfolioSite() {
             </div>
 
             {/* About */}
-            <section className="mt-16">
+            <section className="mt-16 fade-slide-in">
               <article className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 sm:p-8">
                 <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                   <div className="max-w-3xl">
@@ -455,7 +488,7 @@ export default function PortfolioSite() {
       <footer className="border-t border-neutral-900/60 bg-neutral-950/60">
         <div className="mx-auto max-w-7xl px-4 py-8 text-xs text-neutral-500">
           © {new Date().getFullYear()} 徐宏杰 · Portfolio · Built with React
-          v0.1
+          v0.2
         </div>
       </footer>
     </div>
