@@ -27,6 +27,27 @@ const articleContentMap = {
         "该方案的优势：逻辑拆分明确（感知/寻路/移动），可在 Inspector 中调参，具备动态障碍适应性与可视化调试手段；即便在触及网格边界时，也通过 PathFinder 的空节点保护安全失败，不会崩溃。自然可以扩展更多 AI 状态或多种路径策略，是构建动作或 RPG 原型中轻量却实用的寻路解决方案。",
     },
   ],
+  "3D 角色控制 Demo": [
+    {
+      text:
+        "StatePlayerCameraFollow（Assets/Scripts/Camera/StateCameraFollow.cs）负责第三人称跟随，鼠标输入驱动 yaw/pitch，相机位置通过指数平滑插值黏在 StateManager 身后，Tab 切入 CameraControl 的自由摄影模式则提供开发调试；联网时再由 NetworkCameraFollow 自动寻找 Player 标签并锁定，以免多人场景冲突。",
+      mediaIndex: 0,
+    },
+    {
+      text:
+        "角色生命/受击链由 HealthManager（Assets/Scripts/Creature/HealthManager.cs）统一实现：读取 HealthProvider 初始化 HP，TakeDamage 处理穿透与伤害下限，归零广播 GoDied，否则发 OnInjured，方便动画或特效订阅；攻击命中由 AttackAni（Assets/Scripts/Player/Attack/AttackAni.cs）驱动，动画事件触发 HitEnable/HitDisable，让 AttackDetect 只在关键帧开放 hitbox。",
+      mediaIndex: 1,
+    },
+    {
+      text:
+        "Animator Controller 除默认 0 层的全身动作，还额外创建 \"UpperBody\" 层：Avatar Mask 只勾选上半身骨骼，层权重=1，上层播放射击/挥剑等动作时，下层保持跑步；当 AttackAni 被动画事件点火时，hitbox 依旧受控，而下半身维持步伐节奏，实现上、下半身动画分离。",
+      mediaIndex: 2,
+    },
+    {
+      text:
+        "整体结构把相机、生命、攻击、动画分层封装，Inspector 中可以调节灵敏度/偏移或 Animator Layer 权重；既保证稳定视角体验，又能在战斗时叠加更复杂的上半身动作，对动作或 RPG 原型来说是易扩展、易调试的角色控制方案。",
+    },
+  ],
 };
 
 export default function ProjectDetail({ project, onBack }) {
@@ -73,7 +94,7 @@ export default function ProjectDetail({ project, onBack }) {
                             src={media.src}
                             alt={media.alt || `${project.title} 插图 ${idx + 1}`}
                             loading="lazy"
-                            className="mx-auto max-h-[360px] w-full object-contain"
+                            className="mx-auto max-h-[180px] w-full max-w-md object-contain"
                           />
                         </div>
                         {media.alt && (
@@ -101,7 +122,7 @@ export default function ProjectDetail({ project, onBack }) {
                         src={item.src}
                         alt={item.alt || `${project.title} 展示 ${idx + 1}`}
                         loading="lazy"
-                        className="h-full w-full object-cover"
+                        className="mx-auto max-h-[180px] w-full max-w-md object-contain"
                       />
                       {item.alt && (
                         <figcaption className="px-3 py-2 text-xs text-neutral-400">

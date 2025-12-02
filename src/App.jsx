@@ -118,10 +118,24 @@ export default function PortfolioSite() {
         "第三人称可控角色：自制状态机 + Animator 多层动画（上身攻击/下身移动分离）+ 自由可旋转相机，支持平滑移动、攻击与自然过渡。",
       tech: ["Unity", "C#", "Animator", "State Machine", "Character Controller"],
       metrics: [
-        "自研轻量状态机（Idle/Move/Attack/Hit）",
+        "轻量状态机（Idle/Move/Attack/Hit）",
         "Animator 双层动画：上半身攻击、下半身保持移动",
         "相机自由旋转/跟随：支持拖拽观察角色",
         "平滑 BlendTree + 动作参数驱动过渡",
+      ],
+      media: [
+        {
+          src: withBase("Animation/Animation1.gif"),
+          alt: "第三人称视角相机围绕角色平滑旋转",
+        },
+        {
+          src: withBase("Animation/Animation2.gif"),
+          alt: "角色挥剑攻击演示",
+        },
+        {
+          src: withBase("Animation/Animation3.gif"),
+          alt: "Animator 双层控制器分离上下半身动作",
+        },
       ],
       links: { github: "https://github.com/BJ-star-bot/KnightDemo" },
     },
