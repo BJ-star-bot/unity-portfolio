@@ -30,12 +30,12 @@ const articleContentMap = {
   "3D 角色控制 Demo": [
     {
       text:
-        "StatePlayerCameraFollow（Assets/Scripts/Camera/StateCameraFollow.cs）负责第三人称跟随，鼠标输入驱动 yaw/pitch，相机位置通过指数平滑插值黏在 StateManager 身后，Tab 切入 CameraControl 的自由摄影模式则提供开发调试；联网时再由 NetworkCameraFollow 自动寻找 Player 标签并锁定，以免多人场景冲突。",
+        "StatePlayerCameraFollow 负责第三人称跟随，鼠标输入驱动 yaw/pitch，相机位置通过指数平滑插值黏在 StateManager 身后，Tab 切入 CameraControl 的自由摄影模式即可绕场勘景；联网时再由 NetworkCameraFollow 自动寻找 Player 标签并锁定，保证本地多角色或联机调试时都不会抢镜。",
       mediaIndex: 0,
     },
     {
       text:
-        "角色生命/受击链由 HealthManager（Assets/Scripts/Creature/HealthManager.cs）统一实现：读取 HealthProvider 初始化 HP，TakeDamage 处理穿透与伤害下限，归零广播 GoDied，否则发 OnInjured，方便动画或特效订阅；攻击命中由 AttackAni（Assets/Scripts/Player/Attack/AttackAni.cs）驱动，动画事件触发 HitEnable/HitDisable，让 AttackDetect 只在关键帧开放 hitbox。",
+        "角色生命/受击链由 HealthManager 统一实现：读取 HealthProvider 初始化 HP，TakeDamage 处理穿透与伤害下限，归零广播 GoDied，否则发 OnInjured，方便动画或特效订阅；攻击命中由 AttackAni 动画脚本驱动，动画事件触发 HitEnable/HitDisable，让 AttackDetect 只在关键帧开放 hitbox。",
       mediaIndex: 1,
     },
     {
@@ -61,17 +61,17 @@ const articleContentMap = {
     },
     {
       text:
-        "LoadingProgressUI 把进度拆成五段权重，并加入 \"假进度 + 最小速度\" 策略，条子始终向前、不会卡在 90%，也为未来接入下载或清理流程预留了钩子（Assets/Scripts/LoadScene/LoadProgressUI.cs, 6-155）。",
+        "LoadingProgressUI 把进度拆成五段权重，并加入 \"假进度 + 最小速度\" 策略，条子始终向前、不会卡在 90%；同时暴露事件让外部注入资源下载、缓存清理等耗时步骤，为后续扩展多段式加载留出空间。",
     },
     {
       text:
-        "场景 ID 与显示名称通过 SceneMapping 数据驱动（Assets/Scripts/LoadScene/SceneConfigure.cs, 7-97），新增关卡只需登记一次，UI、加载与黑幕流程自动保持一致，是快速搭建统一场景切换体验的工具链。",
+        "场景 ID 与显示名称通过 SceneMapping 数据驱动，新增关卡只需登记一次，UI、加载与黑幕流程便自动保持一致，还能同步维护中文标题、截图等元数据，是快速搭建统一场景切换体验的基础设施。",
     },
   ],
   "联机系统 Demo（LAN + Relay + 状态同步）": [
     {
       text:
-        "项目使用 Unity Netcode + UnityTransport 实现 Host/Client 同步，外围由一套联机按钮脚本控制。LanNetButton（Assets/Scripts/联网/联机逻辑/Buttons/LanNetButton.cs）绑定 NetworkManager 和 UnityTransport，提供 Host、Join、刷新等 UI；开启 Host 时会检测本机 IPv4、调用 Net.StartHost() 并自动写入防火墙规则，同时启动 UDP 广播通道。",
+        "项目使用 Unity Netcode + UnityTransport 实现 Host/Client 同步，外围由一套联机按钮脚本控制。LanNetButton 绑定 NetworkManager 与 UnityTransport，提供 Host、Join、刷新等 UI；开启 Host 时会检测本机 IPv4、调用 Net.StartHost() 并自动写入防火墙规则，同时启动 UDP 广播与扫描通道。",
       mediaIndex: 0,
     },
     {
@@ -85,13 +85,13 @@ const articleContentMap = {
     },
     {
       text:
-        "针对联机调试还提供 NetworkCameraFollow（Assets/Scripts/Camera/NetworkCameraFollow.cs）自动跟随 Player 标签，避免多机状态下相机冲突；StateCameraFollow 则服务离线调试。整套模块覆盖局域网广播、子网扫描、防火墙开放等细节，并预留 RelayNetButton.cs 等扩展接口，可平滑拓展到 Relay/匹配场景。",
+        "针对联机调试还提供 NetworkCameraFollow 自动跟随 Player 标签，避免多机状态下相机冲突；StateCameraFollow 则服务离线调试。整套模块覆盖局域网广播、子网扫描、防火墙开放等细节，并预留 Relay 按钮等扩展接口，可平滑拓展到 Relay/匹配与 State Sync/PredRollback 等更复杂联机场景。",
     },
   ],
   "对象池优化 Demo": [
     {
       text:
-        "Demo 场景由 AddObjectManager 驱动（Assets/Scripts/性能测试/AddObject.cs）：FixedUpdate 中按照 objectNumber 生成球体，勾选 poolTick 时从 ObjectPool<TestBall> 取对象，并根据 ballPool.totalCount/activeCount 实时刷新 UI；关闭 poolTick 则直接 Instantiate，但依旧依托 TestBall.ActiveInstances 统计活跃数量。",
+        "Demo 场景由 AddObjectManager 驱动：FixedUpdate 中按照 objectNumber 生成球体，勾选 poolTick 时从 ObjectPool<TestBall> 取对象，并根据 ballPool.totalCount/activeCount 实时刷新 UI；关闭 poolTick 则直接 Instantiate，但依旧依托 TestBall.ActiveInstances 统计活跃数量，方便一键对比两种策略。",
       mediaIndex: 0,
     },
     {
@@ -101,7 +101,7 @@ const articleContentMap = {
     },
     {
       text:
-        "被复用的 TestBall（Assets/Scripts/性能测试/TestBall.cs）实现 IPoolAble：OnSpawn 初始化弹道、速度与位置，OnDespawn 重置状态，ReturnPool() 归还对象；脚本还在 OnEnable/OnDisable 中维护静态 ActiveInstances，让非池模式下也能统计实时数量，对比差异更加直观。",
+        "被复用的 TestBall 实现 IPoolAble：OnSpawn 初始化弹道、速度与位置，OnDespawn 重置状态，ReturnPool() 归还对象；脚本还在 OnEnable/OnDisable 中维护静态 ActiveInstances，让非池模式下也能统计实时数量，对比差异更加直观，也方便其它子弹/技能沿用相同接口。",
     },
     {
       text:
