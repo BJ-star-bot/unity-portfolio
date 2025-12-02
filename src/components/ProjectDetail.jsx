@@ -68,6 +68,26 @@ const articleContentMap = {
         "场景 ID 与显示名称通过 SceneMapping 数据驱动（Assets/Scripts/LoadScene/SceneConfigure.cs, 7-97），新增关卡只需登记一次，UI、加载与黑幕流程自动保持一致，是快速搭建统一场景切换体验的工具链。",
     },
   ],
+  "联机系统 Demo（LAN + Relay + 状态同步）": [
+    {
+      text:
+        "项目使用 Unity Netcode + UnityTransport 实现 Host/Client 同步，外围由一套联机按钮脚本控制。LanNetButton（Assets/Scripts/联网/联机逻辑/Buttons/LanNetButton.cs）绑定 NetworkManager 和 UnityTransport，提供 Host、Join、刷新等 UI；开启 Host 时会检测本机 IPv4、调用 Net.StartHost() 并自动写入防火墙规则，同时启动 UDP 广播通道。",
+      mediaIndex: 0,
+    },
+    {
+      text:
+        "发现机制分被动广播与主动扫描：BeginDiscovery() 同时运行 ListenForBroadcasts() 与 StartSubnetScan()，前者监听 broadcastPort 的 BroadcastTag|IP|Port 数据，后者遍历本子网发送 DISCOVER 探测，Host 接到后单播回复。结果缓存在线程安全队列，Update() 拉取后刷新 knownHostsOrdered，让 UI 即时显示所有房间。",
+      mediaIndex: 1,
+    },
+    {
+      text:
+        "Host 端额外运行 HostProbeResponderLoop()，专门响应 DISCOVER，确保扫描模式也能发现当前主机；NetworkManager.OnClientConnected/Disconnected 统一管理 UI 状态，联机成功后隐藏选择面板，断开则回到房间列表，实现多人调试时的稳定体验。",
+    },
+    {
+      text:
+        "针对联机调试还提供 NetworkCameraFollow（Assets/Scripts/Camera/NetworkCameraFollow.cs）自动跟随 Player 标签，避免多机状态下相机冲突；StateCameraFollow 则服务离线调试。整套模块覆盖局域网广播、子网扫描、防火墙开放等细节，并预留 RelayNetButton.cs 等扩展接口，可平滑拓展到 Relay/匹配场景。",
+    },
+  ],
   "对象池优化 Demo": [
     {
       text:

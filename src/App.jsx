@@ -55,6 +55,16 @@ export default function PortfolioSite() {
         "Relay 跨网直连：自动创建/加入中继房间",
         "轻量状态同步：插值 / 预测 / 回滚 Demo",
       ],
+      media: [
+        {
+          src: withBase("NetWork/NetWorkGif1.gif"),
+          alt: "Host 视角：创建房间并广播发现",
+        },
+        {
+          src: withBase("NetWork/NetWorkGif2.gif"),
+          alt: "Client 视角：加入主机并同步场景",
+        },
+      ],
       links: { github: "https://github.com/BJ-star-bot/Network" },
     },
     {
