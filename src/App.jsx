@@ -1,8 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 export default function PortfolioSite() {
+  const withBase = (path) => {
+    const base = import.meta.env.BASE_URL.endsWith("/")
+      ? import.meta.env.BASE_URL
+      : `${import.meta.env.BASE_URL}/`;
+    return `${base}${path.replace(/^\/+/g, "")}`;
+  };
   const [query, setQuery] = useState("");
-  const [tag, setTag] = useState("All");
 
   const [activeProject, setActiveProject] = useState(null);
 
@@ -61,19 +66,19 @@ export default function PortfolioSite() {
       links: { github: "https://github.com/BJ-star-bot/FindPath" },
       media: [
         {
-          src: "/FindPathGif/FindPath1.gif",
+          src: withBase("FindPathGif/FindPath1.gif"),
           alt: "角色沿生成路径移动，避开固定障碍",
         },
         {
-          src: "/FindPathGif/FindPath2.gif",
+          src: withBase("FindPathGif/FindPath2.gif"),
           alt: "避障示例：动态绕开移障碍，重新计算网格",
         },
         {
-          src: "/FindPathGif/FindPath3.gif",
+          src: withBase("FindPathGif/FindPath3.gif"),
           alt: "敌人巡逻ai",
         },
         {
-          src: "/FindPathGif/FindPath4.gif",
+          src: withBase("FindPathGif/FindPath4.gif"),
           alt: "敌人接入寻路系统",
         },
       ],
@@ -159,30 +164,19 @@ export default function PortfolioSite() {
   }, [sortOrder]);
 
   // ---------------------------
-  // 标签筛选
-  // ---------------------------
-  const tags = useMemo(() => {
-    return [
-      "All",
-      ...Array.from(new Set(sortedProjects.flatMap((p) => p.tech))).sort(),
-    ];
-  }, [sortedProjects]);
-
-  // ---------------------------
   // 关键字过滤
   // ---------------------------
   const filtered = useMemo(() => {
     return sortedProjects.filter((p) => {
-      const hitTag = tag === "All" || p.tech.includes(tag);
       const q = query.trim().toLowerCase();
       const hitQuery =
         !q ||
         p.title.toLowerCase().includes(q) ||
         p.summary.toLowerCase().includes(q) ||
         p.tech.join(" ").toLowerCase().includes(q);
-      return hitTag && hitQuery;
+      return hitQuery;
     });
-  }, [sortedProjects, tag, query]);
+  }, [sortedProjects, query]);
 
   const aboutSummary =
     "Unity3D 游戏开发实习生，擅长 C# / UGUI / NavMesh / Addressables / Shader Graph，关注可维护性与稳定帧率，能在短周期内交付端到端 Demo。";
@@ -302,22 +296,6 @@ export default function PortfolioSite() {
               </select>
             </div>
 
-            {/* 标签筛选 */}
-            <div className="flex flex-wrap gap-2">
-              {tags.map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setTag(t)}
-                  className={`rounded-full border px-3 py-1 text-xs transition ${
-                    tag === t
-                      ? "border-indigo-400 bg-indigo-500/10 text-indigo-200"
-                      : "border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-neutral-700"
-                  }`}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
           </div>
         </div>
       </header>
