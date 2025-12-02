@@ -48,12 +48,40 @@ const articleContentMap = {
         "整体结构把相机、生命、攻击、动画分层封装，Inspector 中可以调节灵敏度/偏移或 Animator Layer 权重；既保证稳定视角体验，又能在战斗时叠加更复杂的上半身动作，对动作或 RPG 原型来说是易扩展、易调试的角色控制方案。",
     },
   ],
+  "LoadSceneManager 场景切换方案": [
+    {
+      text:
+        "LoadSceneManager 常驻场景，负责触发 OnSceneChangeBegin/End、黑幕过渡、加载协程与 UI 场景的附加加载。核心流程是：黑幕淡入 → 预处理（资源卸载等） → SceneManager.LoadSceneAsync（锁 0.9） → 场景激活 → 黑幕淡出，最后刷新光照探针，保证视觉一致性。",
+      mediaIndex: 0,
+    },
+    {
+      text:
+        "TransitionController 管理黑幕与进度 UI，利用 AnimationCurve 实现无时缩的淡入淡出，CanvasGroup 控制进度条显隐，因此从初始界面跳转到游戏或在关卡里切换场景，都能复用同一套动画体验。",
+      mediaIndex: 1,
+    },
+    {
+      text:
+        "LoadingProgressUI 把进度拆成五段权重，并加入 \"假进度 + 最小速度\" 策略，条子始终向前、不会卡在 90%，也为未来接入下载或清理流程预留了钩子（Assets/Scripts/LoadScene/LoadProgressUI.cs, 6-155）。",
+    },
+    {
+      text:
+        "场景 ID 与显示名称通过 SceneMapping 数据驱动（Assets/Scripts/LoadScene/SceneConfigure.cs, 7-97），新增关卡只需登记一次，UI、加载与黑幕流程自动保持一致，是快速搭建统一场景切换体验的工具链。",
+    },
+  ],
 };
 
 export default function ProjectDetail({ project, onBack }) {
   if (!project) return null;
   const articleSections = articleContentMap[project.title];
   const showArticle = Array.isArray(articleSections) && articleSections.length > 0;
+  const mediaImgStyle = {
+    maxHeight: "180px",
+    width: "100%",
+    maxWidth: "22rem",
+    margin: "0 auto",
+    display: "block",
+    objectFit: "contain",
+  };
 
   return (
     <section className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 sm:p-10 fade-slide-in">
@@ -94,7 +122,7 @@ export default function ProjectDetail({ project, onBack }) {
                             src={media.src}
                             alt={media.alt || `${project.title} 插图 ${idx + 1}`}
                             loading="lazy"
-                            className="mx-auto max-h-[180px] w-full max-w-md object-contain"
+                            style={mediaImgStyle}
                           />
                         </div>
                         {media.alt && (
@@ -122,7 +150,7 @@ export default function ProjectDetail({ project, onBack }) {
                         src={item.src}
                         alt={item.alt || `${project.title} 展示 ${idx + 1}`}
                         loading="lazy"
-                        className="mx-auto max-h-[180px] w-full max-w-md object-contain"
+                        style={mediaImgStyle}
                       />
                       {item.alt && (
                         <figcaption className="px-3 py-2 text-xs text-neutral-400">

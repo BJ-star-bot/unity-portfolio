@@ -109,6 +109,16 @@ export default function PortfolioSite() {
         "附加场景加载与事件回调",
         "支持假进度曲线",
       ],
+      media: [
+        {
+          src: withBase("LoadScene/LoadSceneGif1.gif"),
+          alt: "初始界面滚动开发人员列表与开始游戏加载",
+        },
+        {
+          src: withBase("LoadScene/LoadSceneGif2.gif"),
+          alt: "关卡内触发场景切换流程",
+        },
+      ],
       links: { github: "https://github.com/BJ-star-bot/LoadSceneManager" },
     },
     {
