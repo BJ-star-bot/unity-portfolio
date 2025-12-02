@@ -169,6 +169,32 @@ export default function PortfolioSite() {
       ],
       links: { github: "https://github.com/BJ-star-bot/KnightDemo" },
     },
+    {
+      title: "本地存档系统",
+      period: "2025.07",
+      summary:
+        "接口驱动的 Save/Load 架构：ISaveable + SaveManager + UniqueId，统一序列化任意组件状态，数据写入 JSON 存档。",
+      tech: ["Unity", "C#", "JSON", "存档系统"],
+      metrics: [
+        "ISaveable 接口 Capture/Restore",
+        "SaveManager 自动扫描全局组件",
+        "UniqueId 确保多实例不冲突",
+        "JSON 可读可扩展",
+      ],
+    },
+    {
+      title: "对话系统",
+      period: "2025.06",
+      summary:
+        "Sentence 数据结构 + NpcDialog 触发器 + DialogueManager 面板，支持左右站位与打字机效果的剧情对话。",
+      tech: ["Unity", "C#", "Dialogue", "UI"],
+      metrics: [
+        "Sentence 结构包含角色名/台词/站位",
+        "NpcDialog 触发器驱动 Conversation",
+        "DialogueManager 打字机播放 + 左右对齐",
+        "Conversation 列表可扩展多段脚本",
+      ],
+    },
 
   ];
 

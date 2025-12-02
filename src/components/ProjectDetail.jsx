@@ -108,6 +108,42 @@ const articleContentMap = {
         "性能测试 UI（ShowFrameUI、FrameTime 等）展示帧率、激活物体以及 GC 情况，玩家可按 F 键开始/暂停生成，并通过 Toggle 切换“立即 Instantiate vs. 对象池”来观察 CPU、GC 的变化。统一的 IPoolAble 接口意味着子弹/技能也能复用这套机制，显著降低高频生成物体带来的 GC 暂停。",
     },
   ],
+  "本地存档系统": [
+    {
+      text:
+        "存档方案采用接口驱动：任何可保存对象都实现 ISaveable，提供 CaptureState、RestoreState 与唯一 ID，从而让 SaveManager 不用关心具体字段，直接循环所有实现者即可获得需要序列化的快照。",
+    },
+    {
+      text:
+        "SaveManager 的 SaveGame 会遍历场景（含未激活）里的 ISaveable，将它们输出为 SaveRecord{id、type、json}，再连同当前场景名写入 save.json。LoadGame 则读取文件、校验场景名，并按 id 重新定位组件，利用反射恢复类型后调用 RestoreState，完成状态还原。",
+    },
+    {
+      text:
+        "UniqueId 组件负责生成并序列化 Guid，OnValidate 会提醒缺失，每个 ISaveable 都通过它返回自己的 ID。以 Chest 为例，它在 CaptureState 中写出开关状态结构体，RestoreState 则依据记录刷新 UI，哪怕同一场景挂了多个宝箱也不会混淆。",
+    },
+    {
+      text:
+        "UI 侧只要通过 SaveButton/LoadButton 调用 SaveManager.SaveGame() / LoadGame() 即可，为菜单或调试增加存读按钮非常轻松。新增需要持久化的物体只需添加 UniqueId 并实现 ISaveable，即刻纳入全局存档；JSON 数据可读可调试，加载时校验场景名也避免了误写问题，非常适合扩展成角色属性、任务进度等更复杂的数据集。",
+    },
+  ],
+  "对话系统": [
+    {
+      text:
+        "对话文本采用 Sentence 结构描述：包含角色名、台词以及左/右站位标记，便于在 Inspector 中快速堆叠剧情脚本并控制角色站位视觉。",
+    },
+    {
+      text:
+        "NpcDialog 组件在 Inspector 中配置 Conversation 列表，玩家进入触发器会收到提示，按 C 即调用 DialogueManager.MakeNewDialogue() 开始播放，从而将触发逻辑与展示层解耦。",
+    },
+    {
+      text:
+        "DialogueManager 持有 CanvasGroup 与 TMP_Text，MakeNewDialogue 缓存队列并显示面板，PlayNextSentence 根据 Sentence.IsLeft 调整姓名文本的位置，并通过 TapWord 协程按 TapSpeed 实现打字机效果；Update 监听鼠标左键跳到下一句，结束时隐藏面板。",
+    },
+    {
+      text:
+        "Conversation 以 List<Sentence> 管理，开发者可在 Inspector 随意增减段落；未来易于扩展头像、语音、跳过动画等特性，NpcDialog 也能根据任务状态切换不同 Conversation，快速搭建剧情交互体验。",
+    },
+  ],
 };
 
 export default function ProjectDetail({ project, onBack }) {
