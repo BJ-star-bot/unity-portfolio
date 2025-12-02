@@ -4,6 +4,8 @@ export default function PortfolioSite() {
   const [query, setQuery] = useState("");
   const [tag, setTag] = useState("All");
 
+  const [activeProject, setActiveProject] = useState(null);
+
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("theme") || "mint";
   });
@@ -289,30 +291,46 @@ export default function PortfolioSite() {
 
       {/* 项目展示 */}
       <main className="mx-auto max-w-7xl px-4 pb-24">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((p, i) => (
-            <article
-              key={`${p.title}-${i}`}
-              className="group rounded-2xl border border-neutral-800 bg-neutral-900/60 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-700"
+        {activeProject ? (
+          <section className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 sm:p-10">
+            <button
+              onClick={() => setActiveProject(null)}
+              className="mb-6 inline-flex items-center gap-2 text-sm text-neutral-300 hover:text-white"
             >
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold leading-tight">
-                  {p.title}
-                </h3>
-                {p.period && (
-                  <span className="rounded-full bg-neutral-800 px-2 py-0.5 text-xs text-neutral-300">
-                    {p.period}
+              <span aria-hidden="true">←</span>
+              返回项目列表
+            </button>
+
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+              <div className="max-w-3xl">
+                <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+                  项目介绍
+                </p>
+                <h2 className="mt-2 text-3xl font-semibold text-white">
+                  {activeProject.title}
+                </h2>
+                {activeProject.period && (
+                  <span className="mt-2 inline-flex rounded-full bg-neutral-800 px-3 py-1 text-xs text-neutral-300">
+                    {activeProject.period}
                   </span>
+                )}
+                <p className="mt-4 text-neutral-300 leading-relaxed">
+                  {activeProject.summary}
+                </p>
+
+                {activeProject.metrics?.length > 0 && (
+                  <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-neutral-400">
+                    {activeProject.metrics.map((m, idx) => (
+                      <li key={idx}>{m}</li>
+                    ))}
+                  </ul>
                 )}
               </div>
 
-              <p className="mt-2 text-sm text-neutral-300 min-h-[3.5rem]">
-                {p.summary}
-              </p>
-
-              {p.tech?.length > 0 && (
+              <aside className="w-full max-w-sm rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5">
+                <h3 className="text-sm font-semibold text-neutral-200">技术要点</h3>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {p.tech.map((t) => (
+                  {activeProject.tech?.map((t) => (
                     <span
                       key={t}
                       className="rounded-full bg-neutral-800/80 px-2 py-0.5 text-xs text-neutral-300"
@@ -321,62 +339,116 @@ export default function PortfolioSite() {
                     </span>
                   ))}
                 </div>
-              )}
 
-              {p.metrics?.length > 0 && (
-                <ul className="mt-3 flex list-disc flex-col gap-1 pl-5 text-xs text-neutral-400">
-                  {p.metrics.map((m, idx) => (
-                    <li key={idx}>{m}</li>
-                  ))}
-                </ul>
-              )}
-
-              <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
-                {p.links?.github && (
-                  <a
-                    className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700"
-                    href={p.links.github}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    GitHub
-                  </a>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
-
-        {/* About */}
-        <section className="mt-16">
-          <article className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 sm:p-8">
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-              <div className="max-w-3xl">
-                <h2 className="text-2xl font-semibold">关于我</h2>
-                <p className="mt-3 text-sm text-neutral-300 leading-relaxed">
-                  {aboutSummary}
-                </p>
-                <ul className="mt-4 list-disc pl-5 text-sm text-neutral-400 space-y-1">
-                  <li>多次参加 Brackeys / GMTK / TapTap 聚光灯 GameJam。</li>
-                  <li>喜欢搭建工具链：对象池、LoadSceneManager、UI 框架。</li>
-                  <li>关注关卡加载、性能监控与自动化验证流程。</li>
-                </ul>
-              </div>
-
-              <div className="flex flex-col gap-3 text-sm text-neutral-300">
-                <CopyEmail email="2200623670@qq.com" />
-                <a
-                  className="rounded-xl border border-neutral-700 px-4 py-2 text-center hover:bg-neutral-800"
-                  href={`${import.meta.env.BASE_URL}resume.pdf`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  下载简历（PDF）
-                </a>
-              </div>
+                <div className="mt-5 flex flex-col gap-3 text-sm">
+                  {activeProject.links?.github && (
+                    <a
+                      className="rounded-xl border border-neutral-700 px-4 py-2 text-center hover:bg-neutral-800"
+                      href={activeProject.links.github}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      查看 GitHub
+                    </a>
+                  )}
+                </div>
+              </aside>
             </div>
-          </article>
-        </section>
+          </section>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {filtered.map((p, i) => (
+                <article
+                  key={`${p.title}-${i}`}
+                  onClick={() => setActiveProject(p)}
+                  className="group cursor-pointer rounded-2xl border border-neutral-800 bg-neutral-900/60 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-700"
+                >
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold leading-tight">
+                      {p.title}
+                    </h3>
+                    {p.period && (
+                      <span className="rounded-full bg-neutral-800 px-2 py-0.5 text-xs text-neutral-300">
+                        {p.period}
+                      </span>
+                    )}
+                  </div>
+
+                  <p className="mt-2 text-sm text-neutral-300 min-h-[3.5rem]">
+                    {p.summary}
+                  </p>
+
+                  {p.tech?.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {p.tech.map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-full bg-neutral-800/80 px-2 py-0.5 text-xs text-neutral-300"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {p.metrics?.length > 0 && (
+                    <ul className="mt-3 flex list-disc flex-col gap-1 pl-5 text-xs text-neutral-400">
+                      {p.metrics.map((m, idx) => (
+                        <li key={idx}>{m}</li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
+                    {p.links?.github && (
+                      <a
+                        className="rounded-xl bg-neutral-800 px-3 py-1.5 hover:bg-neutral-700"
+                        href={p.links.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        GitHub
+                      </a>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            {/* About */}
+            <section className="mt-16">
+              <article className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 sm:p-8">
+                <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="max-w-3xl">
+                    <h2 className="text-2xl font-semibold">关于我</h2>
+                    <p className="mt-3 text-sm text-neutral-300 leading-relaxed">
+                      {aboutSummary}
+                    </p>
+                    <ul className="mt-4 list-disc pl-5 text-sm text-neutral-400 space-y-1">
+                      <li>多次参加 Brackeys / GMTK / TapTap 聚光灯 GameJam。</li>
+                      <li>喜欢搭建工具链：对象池、LoadSceneManager、UI 框架。</li>
+                      <li>关注关卡加载、性能监控与自动化验证流程。</li>
+                    </ul>
+                  </div>
+
+                  <div className="flex flex-col gap-3 text-sm text-neutral-300">
+                    <CopyEmail email="2200623670@qq.com" />
+                    <a
+                      className="rounded-xl border border-neutral-700 px-4 py-2 text-center hover:bg-neutral-800"
+                      href={`${import.meta.env.BASE_URL}resume.pdf`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      下载简历（PDF）
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </section>
+          </>
+        )}
       </main>
 
       {/* Footer */}
