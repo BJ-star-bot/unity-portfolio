@@ -68,6 +68,26 @@ const articleContentMap = {
         "场景 ID 与显示名称通过 SceneMapping 数据驱动（Assets/Scripts/LoadScene/SceneConfigure.cs, 7-97），新增关卡只需登记一次，UI、加载与黑幕流程自动保持一致，是快速搭建统一场景切换体验的工具链。",
     },
   ],
+  "对象池优化 Demo": [
+    {
+      text:
+        "Demo 场景由 AddObjectManager 驱动（Assets/Scripts/性能测试/AddObject.cs）：FixedUpdate 中按照 objectNumber 生成球体，勾选 poolTick 时从 ObjectPool<TestBall> 取对象，并根据 ballPool.totalCount/activeCount 实时刷新 UI；关闭 poolTick 则直接 Instantiate，但依旧依托 TestBall.ActiveInstances 统计活跃数量。",
+      mediaIndex: 0,
+    },
+    {
+      text:
+        "ObjectPool<T> 构造时注入预制体、初始容量与父节点，GetObject() 会优先复用空闲实例，若无则创建新对象并调用 OnSpawn()，ReturnObject() 则禁用物体、放回池并维护 total/active 计数，测试中 10000 活跃单位依旧稳定。",
+      mediaIndex: 1,
+    },
+    {
+      text:
+        "被复用的 TestBall（Assets/Scripts/性能测试/TestBall.cs）实现 IPoolAble：OnSpawn 初始化弹道、速度与位置，OnDespawn 重置状态，ReturnPool() 归还对象；脚本还在 OnEnable/OnDisable 中维护静态 ActiveInstances，让非池模式下也能统计实时数量，对比差异更加直观。",
+    },
+    {
+      text:
+        "性能测试 UI（ShowFrameUI、FrameTime 等）展示帧率、激活物体以及 GC 情况，玩家可按 F 键开始/暂停生成，并通过 Toggle 切换“立即 Instantiate vs. 对象池”来观察 CPU、GC 的变化。统一的 IPoolAble 接口意味着子弹/技能也能复用这套机制，显著降低高频生成物体带来的 GC 暂停。",
+    },
+  ],
 };
 
 export default function ProjectDetail({ project, onBack }) {
@@ -75,9 +95,9 @@ export default function ProjectDetail({ project, onBack }) {
   const articleSections = articleContentMap[project.title];
   const showArticle = Array.isArray(articleSections) && articleSections.length > 0;
   const mediaImgStyle = {
-    maxHeight: "180px",
+    maxHeight: "270px",
     width: "100%",
-    maxWidth: "22rem",
+    maxWidth: "33rem",
     margin: "0 auto",
     display: "block",
     objectFit: "contain",

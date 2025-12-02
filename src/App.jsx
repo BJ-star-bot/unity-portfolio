@@ -95,6 +95,16 @@ export default function PortfolioSite() {
         "GridPartition O(1) 迁移 + 近邻检索",
         "CustomUpdateManager 分帧驱动 + 帧率监控",
       ],
+      media: [
+        {
+          src: withBase("ObjectPool/ObjectPoolGif1.gif"),
+          alt: "未使用对象池时 10000 活跃物体的性能表现",
+        },
+        {
+          src: withBase("ObjectPool/ObjectPoolGif2.gif"),
+          alt: "启用对象池后 10000 活跃物体运行效果",
+        },
+      ],
       links: { github: "https://github.com/BJ-star-bot/ObjectPool" },
     },
     {
