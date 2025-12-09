@@ -68,6 +68,19 @@ export default function PortfolioSite() {
       links: { github: "https://github.com/BJ-star-bot/Network" },
     },
     {
+      title: "背包 & 合成系统技术文档",
+      period: "2025.11",
+      summary:
+        "ScriptableObject + SQLite 的背包/合成架构，覆盖数据层、界面层、CSV 配置与扩展建议的完整技术说明。",
+      tech: ["Unity", "Inventory", "Crafting", "SQLite", "Addressables"],
+      metrics: [
+        "PlayerInventoryData：Add/Craft/Compact + SQLite 存档",
+        "两套 CSV 驱动 Item/Craft 配置，支持带引号字段",
+        "Inventory/Crafting UI 组件职责、事件流、调试方法",
+      ],
+      links: { github: withBase("docs/inventory-crafting.md") },
+    },
+    {
       title: "不使用Nav插件的 A* 网格寻路",
       period: "2025.11",
       summary:
