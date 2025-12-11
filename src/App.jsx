@@ -68,17 +68,30 @@ export default function PortfolioSite() {
       links: { github: "https://github.com/BJ-star-bot/Network" },
     },
     {
-      title: "背包 & 合成系统技术文档",
-      period: "2025.11",
+      title: "背包 & 合成系统",
+      period: "2025.12",
       summary:
-        "ScriptableObject + SQLite 的背包/合成架构，覆盖数据层、界面层、CSV 配置与扩展建议的完整技术说明。",
-      tech: ["Unity", "Inventory", "Crafting", "SQLite", "Addressables"],
+        "ScriptableObject 描述道具、SQLite 持久化库存、UGUI 承载背包/合成界面，完整呈现添加道具、编制配方到结果结算的一体化流程。",
+      tech: ["Unity", "UGUI", "Inventory", "Crafting", "SQLite"],
       metrics: [
-        "PlayerInventoryData：Add/Craft/Compact + SQLite 存档",
-        "两套 CSV 驱动 Item/Craft 配置，支持带引号字段",
-        "Inventory/Crafting UI 组件职责、事件流、调试方法",
+        "物品与配方以 CSV → ScriptableObject 导入，热更新易维护",
+        "双面板交互：左侧背包格、自适应 ToolTip，右侧配方列表与合成按钮",
+        "SQLite/JsonUtility 双持久化，断线重启不丢物品",
       ],
-      links: { github: withBase("docs/inventory-crafting.md") },
+      media: [
+        {
+          src: withBase("UGUI/UI1.gif"),
+          alt: "背包界面展示，展示装备、消耗品和稀有材料的排列与悬浮提示",
+        },
+        {
+          src: withBase("UGUI/UI2.gif"),
+          alt: "素材拖拽进入背包并实时刷新数量与 ToolTip",
+        },
+        {
+          src: withBase("UGUI/UI3.gif"),
+          alt: "选择配方并合成，产物自动入包并触发提示",
+        },
+      ],
     },
     {
       title: "不使用Nav插件的 A* 网格寻路",

@@ -27,6 +27,27 @@ const articleContentMap = {
         "该方案的优势：逻辑拆分明确（感知/寻路/移动），可在 Inspector 中调参，具备动态障碍适应性与可视化调试手段；即便在触及网格边界时，也通过 PathFinder 的空节点保护安全失败，不会崩溃。自然可以扩展更多 AI 状态或多种路径策略，是构建动作或 RPG 原型中轻量却实用的寻路解决方案。",
     },
   ],
+  "背包 & 合成系统": [
+    {
+      text:
+        "底层数据使用 ScriptableObject + CSV 生成：ItemDefinition 提供稀有度、堆叠上限、图标与 Tooltip 文案，CraftRecipe 定义输入/输出以及检查回调；启动时由 InventoryBootstrap 读取 CSV→SO→Dictionary，使策划可直接改表快速扩展。",
+      mediaIndex: 0,
+    },
+    {
+      text:
+        "UI 由 UGUI 背包面板 + 右侧 Craft 面板组成：背包格通过 ScrollRect + GridLayoutGroup 动态生成，SlotButton 接入 Pointer 事件展示 Tooltip，支持拖拽/点击快速放入材料，顶部 Tabs 切换装备、材料、消耗品筛选。",
+      mediaIndex: 1,
+    },
+    {
+      text:
+        "CraftPanel 显示 RecipeList、需求素材和产物预览：点击配方后自动高亮满足与缺失项，批量按钮会根据库存计算可制作次数；点击合成时触发 InventoryService.TryCraft()，扣减材料并写入 SQLite/Json 存档。",
+      mediaIndex: 2,
+    },
+    {
+      text:
+        "流程内嵌 DebugOverlay：实时打印 AddItem/RemoveItem、合成成功/失败原因，并提供一键补给测试按钮，方便调试；所有 UI 事件统一经由 InventoryEventBus 分发，后续可无痛接入手柄或热键。",
+    },
+  ],
   "3D 角色控制 Demo": [
     {
       text:
@@ -146,6 +167,35 @@ const articleContentMap = {
   ],
 };
 
+const LOADING_GIF_SRC = "/loading.gif";
+
+function MediaWithLoading({ src, alt, style, loading = "lazy", className }) {
+  const [isLoaded, setIsLoaded] = React.useState(false);
+
+  return (
+    <>
+      {!isLoaded && (
+        <img
+          src={LOADING_GIF_SRC}
+          alt=""
+          aria-hidden="true"
+          style={style}
+          className={className}
+        />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        loading={loading}
+        style={{ ...style, display: isLoaded ? "block" : "none" }}
+        className={className}
+        onLoad={() => setIsLoaded(true)}
+        onError={() => setIsLoaded(true)}
+      />
+    </>
+  );
+}
+
 export default function ProjectDetail({ project, onBack }) {
   if (!project) return null;
   const articleSections = articleContentMap[project.title];
@@ -194,7 +244,7 @@ export default function ProjectDetail({ project, onBack }) {
                     {media && (
                       <figure className="flex flex-col items-center gap-2">
                         <div className="w-full rounded-2xl border border-neutral-800 bg-neutral-950/60 p-2">
-                          <img
+                          <MediaWithLoading
                             src={media.src}
                             alt={media.alt || `${project.title} 插图 ${idx + 1}`}
                             loading="lazy"
@@ -222,7 +272,7 @@ export default function ProjectDetail({ project, onBack }) {
                       key={item.src ?? idx}
                       className="overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950/40"
                     >
-                      <img
+                      <MediaWithLoading
                         src={item.src}
                         alt={item.alt || `${project.title} 展示 ${idx + 1}`}
                         loading="lazy"
