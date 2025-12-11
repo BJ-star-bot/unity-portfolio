@@ -496,7 +496,7 @@ export default function PortfolioSite() {
       <footer className="border-t border-neutral-900/60 bg-neutral-950/60">
         <div className="mx-auto max-w-7xl px-4 py-8 text-xs text-neutral-500">
           © {new Date().getFullYear()} 徐宏杰 · Portfolio · Built with React
-          v0.2
+          v0.3
         </div>
       </footer>
     </div>
