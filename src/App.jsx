@@ -240,6 +240,28 @@ export default function PortfolioSite() {
     },
   ];
 
+  useEffect(() => {
+    const handled = new Set();
+    const instances = [];
+    [...baseProjects, ...extraHighlights].forEach((project) => {
+      project.media?.forEach((item) => {
+        if (item?.src && !handled.has(item.src)) {
+          const img = new Image();
+          img.src = item.src;
+          instances.push(img);
+          handled.add(item.src);
+        }
+      });
+    });
+    return () => {
+      instances.forEach((img) => {
+        img.onload = null;
+        img.onerror = null;
+      });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // ---------------------------
   // 时间排序（持续更新 → 最前，其余按 yyyy.mm）
   // ---------------------------
