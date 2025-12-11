@@ -219,7 +219,10 @@ function MediaWithLoading({ src, alt, style, loading = "lazy", className }) {
           style={{
             ...imageStyle,
             position: "absolute",
-            inset: 0,
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%) scale(0.5)",
+            transformOrigin: "center",
             margin: 0,
             pointerEvents: "none",
           }}
