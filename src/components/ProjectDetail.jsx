@@ -1,5 +1,14 @@
 import React from "react";
 
+const withBase = (path) => {
+  const base = import.meta.env.BASE_URL.endsWith("/")
+    ? import.meta.env.BASE_URL
+    : `${import.meta.env.BASE_URL}/`;
+  return `${base}${path.replace(/^\/+/g, "")}`;
+};
+
+const LOADING_GIF_SRC = withBase("loading.gif");
+
 const articleContentMap = {
   "不使用Nav插件的 A* 网格寻路": [
     {
@@ -167,46 +176,57 @@ const articleContentMap = {
   ],
 };
 
-const withBase = (path) => {
-  const base = import.meta.env.BASE_URL.endsWith("/")
-    ? import.meta.env.BASE_URL
-    : `${import.meta.env.BASE_URL}/`;
-  return `${base}${path.replace(/^\/+/g, "")}`;
-};
-
-const LOADING_GIF_SRC = withBase("loading.gif");
-
 function MediaWithLoading({ src, alt, style, loading = "lazy", className }) {
   const [isLoaded, setIsLoaded] = React.useState(false);
   React.useEffect(() => {
     setIsLoaded(false);
   }, [src]);
 
+  const { margin, maxWidth, width, ...imgRest } = style || {};
+  const wrapperStyle = {
+    margin,
+    maxWidth,
+    width: width ?? "100%",
+    position: "relative",
+  };
+  const imageStyle = {
+    ...imgRest,
+    width: width ?? "100%",
+    display: imgRest?.display ?? "block",
+    objectFit: imgRest?.objectFit ?? "contain",
+  };
+
   return (
-    <>
-      {!isLoaded && (
-        <img
-          src={LOADING_GIF_SRC}
-          alt=""
-          aria-hidden="true"
-          style={style}
-          className={className}
-        />
-      )}
+    <div style={wrapperStyle}>
       <img
         src={src}
         alt={alt}
         loading={loading}
         style={{
-          ...style,
+          ...imageStyle,
           opacity: isLoaded ? 1 : 0,
-          transition: "opacity 0.2s ease",
+          transition: "opacity 0.3s ease",
         }}
         className={className}
         onLoad={() => setIsLoaded(true)}
         onError={() => setIsLoaded(true)}
       />
-    </>
+      {!isLoaded && (
+        <img
+          src={LOADING_GIF_SRC}
+          alt=""
+          aria-hidden="true"
+          style={{
+            ...imageStyle,
+            position: "absolute",
+            inset: 0,
+            margin: 0,
+            pointerEvents: "none",
+          }}
+          className={className}
+        />
+      )}
+    </div>
   );
 }
 
