@@ -167,10 +167,20 @@ const articleContentMap = {
   ],
 };
 
-const LOADING_GIF_SRC = "/loading.gif";
+const withBase = (path) => {
+  const base = import.meta.env.BASE_URL.endsWith("/")
+    ? import.meta.env.BASE_URL
+    : `${import.meta.env.BASE_URL}/`;
+  return `${base}${path.replace(/^\/+/g, "")}`;
+};
+
+const LOADING_GIF_SRC = withBase("loading.gif");
 
 function MediaWithLoading({ src, alt, style, loading = "lazy", className }) {
   const [isLoaded, setIsLoaded] = React.useState(false);
+  React.useEffect(() => {
+    setIsLoaded(false);
+  }, [src]);
 
   return (
     <>
@@ -187,7 +197,11 @@ function MediaWithLoading({ src, alt, style, loading = "lazy", className }) {
         src={src}
         alt={alt}
         loading={loading}
-        style={{ ...style, display: isLoaded ? "block" : "none" }}
+        style={{
+          ...style,
+          opacity: isLoaded ? 1 : 0,
+          transition: "opacity 0.2s ease",
+        }}
         className={className}
         onLoad={() => setIsLoaded(true)}
         onError={() => setIsLoaded(true)}
