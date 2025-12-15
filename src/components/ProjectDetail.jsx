@@ -39,22 +39,26 @@ const articleContentMap = {
   "背包 & 合成系统": [
     {
       text:
-        "底层数据使用 ScriptableObject + CSV 生成：ItemDefinition 提供稀有度、堆叠上限、图标与 Tooltip 文案，CraftRecipe 定义输入/输出以及检查回调；启动时由 InventoryBootstrap 读取 CSV→SO→Dictionary，使策划可直接改表快速扩展。",
+        "项目源自 Idle 类玩法：背包与合成是玩家反复使用的闭环，因此我们把逻辑拆成“配置表 + ScriptableObject 状态 + SQLite 存档”三层。ItemDatabase 与 CraftingRecipeDatabase 由 CSV（配置表/物品信息配置.CSV、配置表/合成配置表.CSV）驱动，导入后生成 ItemDefinition / CraftRecipe ScriptableObject，让策划只需改表即可新增武器、材料或配方，客户端自动获得稀有度、MaxStack、描述等元数据。",
       mediaIndex: 0,
     },
     {
       text:
-        "UI 由 UGUI 背包面板 + 右侧 Craft 面板组成：背包格通过 ScrollRect + GridLayoutGroup 动态生成，SlotButton 接入 Pointer 事件展示 Tooltip，支持拖拽/点击快速放入材料，顶部 Tabs 切换装备、材料、消耗品筛选。",
+        "PlayerInventoryData 是核心数据结构：内部维护 _slots（SlotData[]）、_slotCapacity 以及多个事件。OnEnable 时读取 SQLite4Unity3d 的 inventory.db，如果 slot 表为空就把 ScriptableObject 的初始格子落地；AddItem/Craft/Consume 全程通过事务更新 inventory_slots(slotIndex, itemId, count)，并在成功后广播 OnInventoryChanged/OnInventoryFull 让 UI 统一刷新。",
       mediaIndex: 1,
     },
     {
       text:
-        "CraftPanel 显示 RecipeList、需求素材和产物预览：点击配方后自动高亮满足与缺失项，批量按钮会根据库存计算可制作次数；点击合成时触发 InventoryService.TryCraft()，扣减材料并写入 SQLite/Json 存档。",
+        "AddItem 先补满已有堆叠，再寻找空格，并把剩余堆叠写回 SQLite；ConsumeItem 与 CompactSlots 保证删除后没有“空洞”；Craft API 则先检查 CraftRecipe 的材料列表，计算可批量制作次数，再批量扣除材料并把产物根据 MaxStack 分配到 slots。所有操作都在单一数据入口完成，保证配置表、运行时状态与存档一致。",
       mediaIndex: 2,
     },
     {
       text:
-        "流程内嵌 DebugOverlay：实时打印 AddItem/RemoveItem、合成成功/失败原因，并提供一键补给测试按钮，方便调试；所有 UI 事件统一经由 InventoryEventBus 分发，后续可无痛接入手柄或热键。",
+        "表现层采用组件化 UGUI：InventoryGridPopulator 生成格子，InventoryItemSlotView 根据 ItemDatabase 传来的图标与数量刷新，TooltipTrigger 兼容旧/新输入系统；CraftingUIController 复用同一 SlotView 做“配方卡片”，DetailPanel 显示材料拥有量与需求差异（CraftingMaterialRequirementItem 通过颜色标记不足项），点击制作时调用 PlayerInventoryData.Craft，并以动画反馈结果。",
+    },
+    {
+      text:
+        "调试上提供 InventoryAddItemWidget 快速注入物品、DebugOverlay 观察 Add/Remove 流程、以及 Reset Inventory / 清空 SQLite 的入口。若要扩展多存档，只需在 inventory_slots 增加 profile_id 字段即可把数据隔离；要做批量合成、装备系统或配方分类，也能沿用同一 CSV→ScriptableObject→SQLite 的数据结构，保证配置敏捷与客户端逻辑清晰。",
     },
   ],
   "3D 角色控制 Demo": [
